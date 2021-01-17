@@ -1,6 +1,24 @@
+//Project 1
+//COP4610
+//Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
+
+#include "BackgroundProcess.h"
+#include "CD.h"
+#include "CommandExe.h"
+#include "Echo.h"
+#include "EnvVariables.h"
+#include "Exit.h"
+#include "IO.h"
+#include "Jobs.h"
+#include "Path.h"
+#include "Piping.h"
+#include "Prompt.h"
+#include "Tilde.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "tokenlist.h"
 
 char *get_input(void);
@@ -27,12 +45,13 @@ int main()
     {
 			printf("token %d: (%s)\n", i, tokens->items[i]);
 
-    //   if(tokens->items[i]  strcmp("cd"))
-    //   {
-    //       //fork -->
-    //       //run cd function (tokens->items[1])
-    //       //exit
-    //   }
+      //checks if the first character is a '$'
+      if(tokens->items[i][0] ==  '$')
+      {
+          char* substr = tokens->items[i] + 1;  //removes '$' from token
+          getEnvironment(substr);               //passes token to getEnvironment function
+      }
+
 		}
 
 		free(input);
