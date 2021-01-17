@@ -19,11 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-typedef struct {
-	int size;
-	char **items;
-} tokenlist;
+#include "tokenlist.h"
 
 char *get_input(void);
 tokenlist *get_tokens(char *input);
@@ -55,6 +51,7 @@ int main()
           char* substr = tokens->items[i] + 1;  //removes '$' from token
           getEnvironment(substr);               //passes token to getEnvironment function
       }
+
 		}
 
 		free(input);
