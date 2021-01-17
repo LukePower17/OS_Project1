@@ -1,11 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-typedef struct {
-	int size;
-	char **items;
-} tokenlist;
+#include "tokenlist.h"
 
 char *get_input(void);
 tokenlist *get_tokens(char *input);
@@ -31,12 +27,12 @@ int main()
     {
 			printf("token %d: (%s)\n", i, tokens->items[i]);
 
-      if(tokens->items[i]  strcmp("cd"))
-      {
-          //fork -->
-          //run cd function (tokens->items[1])
-          //exit
-      }
+    //   if(tokens->items[i]  strcmp("cd"))
+    //   {
+    //       //fork -->
+    //       //run cd function (tokens->items[1])
+    //       //exit
+    //   }
 		}
 
 		free(input);
