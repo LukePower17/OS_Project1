@@ -6,4 +6,3 @@ Project1.o: Project1.o Echo.o
 
 Echo.o: Echo.c Echo.h
 	gcc -c Echo.c
-

@@ -1,7 +1,28 @@
+//Project 1
+//COP4610
+//Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
+
+#include "BackgroundProcess.h"
+#include "CD.h"
+#include "CommandExe.h"
+#include "Echo.h"
+#include "EnvVariables.h"
+#include "Exit.h"
+#include "IO.h"
+#include "Jobs.h"
+#include "Path.h"
+#include "Piping.h"
+#include "Prompt.h"
+#include "Tilde.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+<<<<<<< HEAD
 #include <ctype.h>
+=======
+
+>>>>>>> 664770b5b1256e8ad1e301c08ebb1fc1187602db
 #include "tokenlist.h"
 #include "Echo.h"
 
@@ -25,6 +46,7 @@ int main()
 		// printf("whole input: %s\n", input);
 
 		tokenlist *tokens = get_tokens(input);
+<<<<<<< HEAD
 	
 		// for (int i = 0; i < tokens->size; i++)
     	// {
@@ -41,6 +63,20 @@ int main()
 		// }
 
 		echo(tokens);
+=======
+		for (int i = 0; i < tokens->size; i++)
+    {
+			printf("token %d: (%s)\n", i, tokens->items[i]);
+
+      //checks if the first character is a '$'
+      if(tokens->items[i][0] ==  '$')
+      {
+          char* substr = tokens->items[i] + 1;  //removes '$' from token
+          getEnvironment(substr);               //passes token to getEnvironment function
+      }
+
+		}
+>>>>>>> 664770b5b1256e8ad1e301c08ebb1fc1187602db
 
 		free(input);
 		free_tokens(tokens);
