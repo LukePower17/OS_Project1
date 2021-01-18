@@ -48,8 +48,7 @@ int main()
       //checks if the first character is a '$'
       if(tokens->items[i][0] ==  '$')
       {
-          char* substr = tokens->items[i] + 1;  //removes '$' from token
-          getEnvironment(substr);               //passes token to getEnvironment function
+					getEnvironment(tokens->items[i]);
       }
 
 		}
