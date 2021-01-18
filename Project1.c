@@ -18,8 +18,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <ctype.h>
 #include "tokenlist.h"
+#include "Echo.h"
 
 char *get_input(void);
 tokenlist *get_tokens(char *input);
@@ -38,9 +39,10 @@ int main()
 		 */
 
 		char *input = get_input();
-		printf("whole input: %s\n", input);
+		// printf("whole input: %s\n", input);
 
 		tokenlist *tokens = get_tokens(input);
+
 		for (int i = 0; i < tokens->size; i++)
     {
 			printf("token %d: (%s)\n", i, tokens->items[i]);
@@ -52,6 +54,9 @@ int main()
       }
 
 		}
+
+		echo(tokens);
+
 
 		free(input);
 		free_tokens(tokens);
