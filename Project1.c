@@ -42,22 +42,21 @@ int main()
 		// printf("whole input: %s\n", input);
 
 		tokenlist *tokens = get_tokens(input);
-	
-		// for (int i = 0; i < tokens->size; i++)
-    	// {
-		// 	// printf("token %d: (%s)\n", i, tokens->items[i]);
-			
-		// 	// if(strcmp("echo", tokens->items[0]))
-			
-		// 	// if(strcmp("cd", tokens->items[i]))
-		// 	// {
-		// 	// 	//fork -->
-		// 	// 	//run cd function (tokens->items[1])
-		// 	// 	//exit
-		// 	// }
-		// }
+
+		for (int i = 0; i < tokens->size; i++)
+    {
+			printf("token %d: (%s)\n", i, tokens->items[i]);
+
+      //checks if the first character is a '$'
+      if(tokens->items[i][0] ==  '$')
+      {
+					getEnvironment(tokens->items[i]);
+      }
+
+		}
 
 		echo(tokens);
+
 
 		free(input);
 		free_tokens(tokens);

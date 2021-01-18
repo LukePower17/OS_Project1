@@ -6,5 +6,6 @@
 
 void getEnvironment(char *name)
 {
-    printf("%s\n", getenv(name));   //Prints the enviroment variable to screen
+    char* substr = name + 1;  //removes '$' from token
+    printf("%s\n", getenv(substr));   //Prints the enviroment variable to screen
 }
