@@ -1,8 +1,7 @@
-shell: Project1.o Echo.o 
-	gcc -o shell Project1.o Echo.o
+all: shell
 
-Project1.o: Project1.o Echo.o
-	gcc -c Project1.c
+shell:
+	gcc -o shell Project1.c EnvVariables.c Echo.c Prompt.c -std=c99
 
-Echo.o: Echo.c Echo.h
-	gcc -c Echo.c
+clean:
+	rm shell
