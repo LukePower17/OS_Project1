@@ -39,6 +39,8 @@ int main()
 		 * tokens contains substrings from input split by spaces
 		 */
 
+		 pathSearch("ls");
+
 		char *input = get_input();
 		// printf("whole input: %s\n", input);
 
