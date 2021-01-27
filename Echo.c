@@ -47,10 +47,9 @@ void echo(tokenlist* tokens)
                 printf("\n");
             }
         }
-        
+
         free(cmd);
-        
+
     }
 
 }
-

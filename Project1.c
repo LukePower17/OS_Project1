@@ -55,7 +55,7 @@ int main()
 
 		}
 
-		echo(tokens);
+		//echo(tokens);
 
 
 		free(input);
