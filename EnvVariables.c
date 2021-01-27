@@ -4,8 +4,13 @@
 
 #include "EnvVariables.h"
 
-void getEnvironment(char *name)
+void printEnvironment(char *name)
 {
-    char* substr = name + 1;  //removes '$' from token
-    printf("%s\n", getenv(substr));   //Prints the enviroment variable to screen
+    printf("%s", getEnvironment(name)); //Prints the enviroment variable to screen
+}
+
+char* getEnvironment(char * name){
+  char * str = (char*)malloc(strlen(getenv(name + 1)) + 1);
+  strcpy(str, getenv(name + 1));
+  return str;
 }

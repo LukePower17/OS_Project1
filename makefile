@@ -1,14 +1,7 @@
-shell: Project1.o Echo.o
-	gcc -o shell Project1.o Echo.o
+all: shell
 
-Project1.o: Project1.o Echo.o
-	gcc -c -std=c99 Project1.c
-
-Echo.o: Echo.c Echo.h
-	gcc -c -std=c99 Echo.c
+shell:
+	gcc -o shell Project1.c EnvVariables.c Echo.c Prompt.c -std=c99
 
 clean:
-	rm *.o *.x
-
-
-#please include  -std=c99		for all files
+	rm shell

@@ -32,7 +32,8 @@ void free_tokens(tokenlist *tokens);
 int main()
 {
 	while (1) {
-		printf("> ");
+		//printf("> ");
+		printPrompt();
 
 		/* input contains the whole command
 		 * tokens contains substrings from input split by spaces

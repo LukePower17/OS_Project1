@@ -7,5 +7,6 @@
 #ifndef ENV_VARIABLES_H
 #define ENV_VARIABLES_H
 
-void getEnvironment(char *name);
+void printEnvironment(char *name);
+char* getEnvironment(char * name);
 #endif
