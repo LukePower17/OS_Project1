@@ -39,8 +39,6 @@ int main()
 		 * tokens contains substrings from input split by spaces
 		 */
 
-		 pathSearch("ls");
-
 		char *input = get_input();
 		// printf("whole input: %s\n", input);
 
@@ -53,7 +51,7 @@ int main()
       //checks if the first character is a '$'
       if(tokens->items[i][0] ==  '$')
       {
-					getEnvironment(tokens->items[i]);
+					printEnvironment(tokens->items[i]);
       }
 
 		}

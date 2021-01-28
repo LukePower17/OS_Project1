@@ -5,10 +5,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "EnvVariables.h"
+#include <unistd.h>
 
 #ifndef PATH_H
 #define PATH_H
 
-void pathSearch(char * command);
+char* pathSearch(char * command);
 
 #endif
