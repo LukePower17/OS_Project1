@@ -51,12 +51,12 @@ int main()
       //checks if the first character is a '$'
       if(tokens->items[i][0] ==  '$')
       {
-					getEnvironment(tokens->items[i]);
+					printEnvironment(tokens->items[i]);
       }
 
 		}
 
-		echo(tokens);
+		//echo(tokens);
 
 
 		free(input);
