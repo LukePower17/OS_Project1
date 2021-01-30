@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #ifndef ENV_VARIABLES_H
 #define ENV_VARIABLES_H
 

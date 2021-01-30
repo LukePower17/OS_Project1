@@ -8,28 +8,30 @@ char* pathSearch(char * command)
 {
   char* path = getEnvironment("$PATH");
   char* token = strtok(path,":");
-  char* errorMsg = "This command cannot be found\n";
 
-  char *a[100];
-  int i = 0;
-  int success = 1;
+  char * a;
+  int failure = 1;
 
    /* walk through other tokens */
-   while( token != NULL )
+   while( token != NULL && failure)
    {
-      a[i] = malloc( sizeof(*command) + (sizeof(*token)) + 2);
-      strcat(a[i], token);
-      strcat(a[i], "/");
-      strcat(a[i], command);
+      a = (char *)malloc( strlen(command) + strlen(token) + 2);
+      strcat(a, token);
+      strcat(a, "/");
+      strcat(a, command);
 
-      success = access(a[i], F_OK);
-      if(success == 0)  //0 means success
+      //printf("%s\n", a);
+      failure = access(a, F_OK);
+
+      if(failure)
       {
-        return token;
+        free(a);
+        token =  strtok(NULL,":");
       }
-      i++;
-
-      token =  strtok(NULL,":");
    }
-   return errorMsg;
+   if (!failure){
+     return a;
+   }
+   else
+    return NULL;
 }
