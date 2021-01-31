@@ -1,3 +1,5 @@
+// Comment test
+
 #include "IO.h"
 #include <string.h>
 #include <stdio.h>
