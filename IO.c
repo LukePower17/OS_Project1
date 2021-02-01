@@ -1,6 +1,8 @@
 // Comment test
 
 #include "IO.h"
+#include "tokenlist.h"
+#include "CommandExe.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -88,8 +90,13 @@ void redirection(tokenlist *tokens)
                 dup(fd);
                 close(fd);
 
+                tokenlist *commandList = new_tokenlist();
+                add_token(commandList, command);
+
                 // Execute the commaand
-                execv("/bin", command);
+                commandExecution(commandList);
+
+                free_tokens(commandList);
             }
             else
             {
@@ -97,7 +104,7 @@ void redirection(tokenlist *tokens)
                 // wait for p_id
             }
         }
-        else if (inputRedir == 1 && outputRedir == 0)
+        else if (inputRedir == 1 && outputRedir == 1)
         {
             int fd = open(inputFile, O_RDONLY);
 
@@ -119,17 +126,21 @@ void redirection(tokenlist *tokens)
                 // execv(command);
                 int fd2 = open(outputFile, O_RDWR | O_CREAT | O_TRUNC);
 
-                pid_t p_id = fork();
+                pid_t p_id2 = fork();
 
-                if (p_id == 0)
+                if (p_id2 == 0)
                 {
                     close(1);
 
                     dup(fd2);
                     close(fd2);
+                    tokenlist *commandList = new_tokenlist();
+                    add_token(commandList, command);
 
-                    // Execute the commaand
-                    execv("/bin", command);
+                    // Execute the command
+                    commandExecution(commandList);
+
+                    free_tokens(commandList);
                 }
                 else
                 {
@@ -144,7 +155,7 @@ void redirection(tokenlist *tokens)
             }
         }
 
-        else if (inputRedir == 1 && outputRedir == 1)
+        else if (inputRedir == 1 && outputRedir == 0)
         {
             int fd = open(inputFile, O_RDONLY);
 
@@ -162,8 +173,13 @@ void redirection(tokenlist *tokens)
                 dup(fd);
                 close(fd);
 
-                // Execute the commaand
-                execv("/bin", command);
+                tokenlist *commandList = new_tokenlist();
+                add_token(commandList, command);
+
+                // Execute the command
+                commandExecution(commandList);
+
+                free_tokens(commandList);
             }
             else
             {
