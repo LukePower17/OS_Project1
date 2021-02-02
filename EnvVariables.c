@@ -11,10 +11,7 @@ void printEnvironment(char *name)
 
 char *getEnvironment(char *name)
 {
-  // printf("In get Env\n");
-  // printf("%s\n", name);
-  // printf("value %s\n", getenv(name + 1));
-  // printf("len: %d\n", strlen(getenv(name + 1)));
+
   char *value = getenv(name + 1);
 
   char *str = NULL;
@@ -24,8 +21,6 @@ char *getEnvironment(char *name)
     str = (char *)malloc(strlen(getenv(name + 1)) + 1);
     strcpy(str, getenv(name + 1));
   }
-
-  // printf("Out of get Env\n");
 
   return str;
 }

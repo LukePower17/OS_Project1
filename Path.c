@@ -6,7 +6,6 @@
 #include <stdio.h>
 char *pathSearch(char *command)
 {
-	// printf("In path Seach\n");
 
 	char *path = getEnvironment("$PATH");
 	char *token = strtok(path, ":");
@@ -31,8 +30,6 @@ char *pathSearch(char *command)
 			token = strtok(NULL, ":");
 		}
 	}
-
-	// printf("Out of path Seach\n");
 
 	if (!failure)
 	{

@@ -24,7 +24,6 @@
 
 int main()
 {
-	printf("In Project1\n");
 	while (1)
 	{
 		printPrompt();
