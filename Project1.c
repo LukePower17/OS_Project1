@@ -3,11 +3,10 @@
 //Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
 
 // #include "BackgroundProcess.h"
-// #include "CD.h"
+#include "CD.h"
 #include "CommandExe.h"
 #include "Echo.h"
 #include "EnvVariables.h"
-// #include "Exit.h"
 #include "IO.h"
 // #include "Jobs.h"
 #include "Path.h"
@@ -19,20 +18,25 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 #include "tokenlist.h"
 #include "Echo.h"
 
 int main()
 {
-	while (1)
+	time_t begin = time(NULL);
+	char *input;
+	int currentTime = 0;
+	int mostTime = 0;
+
+	do
 	{
 		printPrompt();
 
 		/* input contains the whole command
 		 * tokens contains substrings from input split by spaces
 		 */
-
-		char *input = get_input();
+		input = get_input();
 		//printf("whole input: *%s*\n", input);
 
 		if (input[0] != '\0')
@@ -56,14 +60,27 @@ int main()
 			}
 
 			//printf("Resolved path:\n");
-			commandExecution(tokens);
+			currentTime = commandExecution(tokens);
+
+			if(currentTime > mostTime)
+			{
+				mostTime = currentTime;
+			}
+
+			if(strcmp(tokens->items[0],"cd") == 0)
+			{
+				changeDir(tokens);
+			}
 
 			//echo(tokens);
 			//printf("Back in main\n" );
 			free_tokens(tokens);
 		}
+	}while(strcmp(input,"exit") != 0);
+
 		free(input);
-	}
+		time_t end = time(NULL);
+		printf("Shell ran for %d seconds and took %d seconds to execute one command.\n", (end - begin), mostTime );
 
 	return 0;
 }
