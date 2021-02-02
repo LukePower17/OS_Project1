@@ -1,4 +1,8 @@
+// Comment test
+
 #include "IO.h"
+#include "tokenlist.h"
+#include "CommandExe.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,6 +28,8 @@ void redirection(tokenlist *tokens)
     printf("In IO\n");
 
     int value = isValid(tokens);
+
+    printf("value %d\n", value);
 
     if (value == 1)
     {
@@ -53,6 +59,8 @@ void redirection(tokenlist *tokens)
                 }
                 else
                 {
+                    printf("Error!\n");
+
                     return;
                 }
             }
@@ -67,6 +75,7 @@ void redirection(tokenlist *tokens)
                 }
                 else
                 {
+                    printf("Error!\n");
                     return;
                 }
             }
@@ -81,11 +90,12 @@ void redirection(tokenlist *tokens)
         // First priority is for < operator
         if (inputRedir == 0 && outputRedir == 1)
         {
+            printf("");
             int fd = open(outputFile, O_RDWR | O_CREAT | O_TRUNC);
 
-            pid_t p_id = fork();
+            pid_t p_id2 = fork();
 
-            if (p_id == 0)
+            if (p_id2 == 0)
             {
                 close(1);
 
