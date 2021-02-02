@@ -8,18 +8,14 @@
 void printPrompt()
 {
 
-  printf("In print Prompt\n");
   char *user = getEnvironment("$USER");
   char *host = getEnvironment("$MACHINE");
   char *pwd = getEnvironment("$PWD");
 
-  if (host == NULL)
-
-    printf("%s@%s: %s>", user, host, pwd);
+  printf("%s@%s: %s>", user, host, pwd);
 
   free(user);
   free(host);
   free(pwd);
 
-  printf("Out of print Prompt\n");
 }

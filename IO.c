@@ -21,7 +21,6 @@ int isValid(tokenlist *tokens)
 
 void redirection(tokenlist *tokens)
 {
-    printf("In IO\n");
 
     int value = isValid(tokens);
 
@@ -176,5 +175,4 @@ void redirection(tokenlist *tokens)
         // Then >
     }
 
-    printf("Out of IO\n");
 }

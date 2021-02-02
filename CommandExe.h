@@ -13,7 +13,8 @@
 
 #include "Path.h"
 #include "tokenlist.h"
+#include <time.h>
 
-void commandExecution(tokenlist* tokens);
+int commandExecution(tokenlist* tokens);
 
 #endif
