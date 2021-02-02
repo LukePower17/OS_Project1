@@ -65,6 +65,7 @@ int main()
 		}
 		free(input);
 	}
+	printf("Out of shell");
 
 	return 0;
 }

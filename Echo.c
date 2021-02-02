@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "tokenlist.h"
 #include "EnvVariables.h"
+#include "Echo.h"
 #include <stdio.h>
 
 char *lowerCase(char *s)

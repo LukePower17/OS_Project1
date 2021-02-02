@@ -11,7 +11,7 @@ void printEnvironment(char *name)
 
 char *getEnvironment(char *name)
 {
-  // printf("In get Env\n");
+  printf("In get Env\n");
   // printf("%s\n", name);
   // printf("value %s\n", getenv(name + 1));
   // printf("len: %d\n", strlen(getenv(name + 1)));
@@ -25,7 +25,7 @@ char *getEnvironment(char *name)
     strcpy(str, getenv(name + 1));
   }
 
-  // printf("Out of get Env\n");
+  printf("Out of get Env\n");
 
   return str;
 }
