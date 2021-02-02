@@ -11,9 +11,16 @@ void printEnvironment(char *name)
 
 char *getEnvironment(char *name)
 {
-  char *str = (char *)malloc(strlen(getenv(name + 1)) + 1);
 
-  strcpy(str, getenv(name + 1));
+  char *value = getenv(name + 1);
+
+  char *str = NULL;
+
+  if (getenv(name + 1) != NULL)
+  {
+    str = (char *)malloc(strlen(getenv(name + 1)) + 1);
+    strcpy(str, getenv(name + 1));
+  }
 
   return str;
 }

@@ -9,13 +9,15 @@ void printPrompt()
 {
 
   char *user = getEnvironment("$USER");
-  char *host = getEnvironment("$MACHINE");
+  char *host = getEnvironment("$HOST");
   char *pwd = getEnvironment("$PWD");
 
   printf("%s@%s: %s>", user, host, pwd);
 
-  free(user);
-  free(host);
-  free(pwd);
-
+  if (user != NULL)
+    free(user);
+  if (host != NULL)
+    free(host);
+  if (pwd != NULL)
+    free(pwd);
 }

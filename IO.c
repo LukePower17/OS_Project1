@@ -71,6 +71,9 @@ void redirection(tokenlist *tokens)
             }
         }
 
+        tokenlist *commandList = new_tokenlist();
+        add_token(commandList, command);
+
         // Then we have redirection
         int dup(int fd);
 
@@ -89,7 +92,7 @@ void redirection(tokenlist *tokens)
                 close(fd);
 
                 // Execute the commaand
-                execv("/bin", command);
+                commandExecution(commandList);
             }
             else
             {
@@ -129,7 +132,9 @@ void redirection(tokenlist *tokens)
                     close(fd2);
 
                     // Execute the commaand
-                    execv("/bin", command);
+                    commandExecution(commandList);
+
+                    // execv("/bin", command);
                 }
                 else
                 {
@@ -163,7 +168,7 @@ void redirection(tokenlist *tokens)
                 close(fd);
 
                 // Execute the commaand
-                execv("/bin", command);
+                commandExecution(commandList);
             }
             else
             {
@@ -174,5 +179,4 @@ void redirection(tokenlist *tokens)
 
         // Then >
     }
-
 }
