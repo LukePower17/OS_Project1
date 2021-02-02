@@ -81,6 +81,10 @@ void redirection(tokenlist *tokens)
             }
         }
 
+        printf("Valid\n");
+        printf("outputRedir %d", outputRedir);
+        printf("inputFile %d", inputRedir);
+
         tokenlist *commandList = new_tokenlist();
         add_token(commandList, command);
 
