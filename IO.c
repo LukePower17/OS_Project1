@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdio.h>
 
 int isValid(tokenlist *tokens)
 {
@@ -20,6 +21,8 @@ int isValid(tokenlist *tokens)
 
 void redirection(tokenlist *tokens)
 {
+    printf("In IO\n");
+
     int value = isValid(tokens);
 
     if (value == 1)
@@ -172,4 +175,6 @@ void redirection(tokenlist *tokens)
 
         // Then >
     }
+
+    printf("Out of IO\n");
 }

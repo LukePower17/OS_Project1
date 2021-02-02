@@ -2,14 +2,14 @@
 //COP4610
 //Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
 
-#include "BackgroundProcess.h"
-#include "CD.h"
+// #include "BackgroundProcess.h"
+// #include "CD.h"
 #include "CommandExe.h"
 #include "Echo.h"
 #include "EnvVariables.h"
-#include "Exit.h"
+// #include "Exit.h"
 #include "IO.h"
-#include "Jobs.h"
+// #include "Jobs.h"
 #include "Path.h"
 #include "Piping.h"
 #include "Prompt.h"
@@ -22,10 +22,11 @@
 #include "tokenlist.h"
 #include "Echo.h"
 
-
 int main()
 {
-	while (1) {
+	printf("In Project1\n");
+	while (1)
+	{
 		printPrompt();
 
 		/* input contains the whole command
@@ -35,7 +36,8 @@ int main()
 		char *input = get_input();
 		//printf("whole input: *%s*\n", input);
 
-		if (input[0] != '\0'){
+		if (input[0] != '\0')
+		{
 			/*
 			Condition to check if input is empty
 			Otherwise the properties of tokenlist will be null, resulting in crash
@@ -44,14 +46,14 @@ int main()
 			tokenlist *tokens = get_tokens(input);
 
 			for (int i = 0; i < tokens->size; i++)
-	    {
+			{
 				//printf("token %d: (%s)\n", i, tokens->items[i]);
 
-	      //checks if the first character is a '$'
-	      if(tokens->items[i][0] == '$')
-	      {
-						printEnvironment(tokens->items[i]);
-	      }
+				//checks if the first character is a '$'
+				if (tokens->items[i][0] == '$')
+				{
+					printEnvironment(tokens->items[i]);
+				}
 			}
 
 			//printf("Resolved path:\n");

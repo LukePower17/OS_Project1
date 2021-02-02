@@ -3,15 +3,23 @@
 //Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
 
 #include "Prompt.h"
+#include <stdio.h>
 
-void printPrompt(){
-  char* user = getEnvironment("$USER");
-  char* host = getEnvironment("$HOST");
-  char* pwd = getEnvironment("$PWD");
+void printPrompt()
+{
 
-  printf("%s@%s: %s>", user, host, pwd);
+  printf("In print Prompt\n");
+  char *user = getEnvironment("$USER");
+  char *host = getEnvironment("$MACHINE");
+  char *pwd = getEnvironment("$PWD");
+
+  if (host == NULL)
+
+    printf("%s@%s: %s>", user, host, pwd);
 
   free(user);
   free(host);
   free(pwd);
+
+  printf("Out of print Prompt\n");
 }

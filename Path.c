@@ -3,35 +3,41 @@
 //Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
 
 #include "Path.h"
-
-char* pathSearch(char * command)
+#include <stdio.h>
+char *pathSearch(char *command)
 {
-  char* path = getEnvironment("$PATH");
-  char* token = strtok(path,":");
+	printf("In path Seach\n");
 
-  char * a;
-  int failure = 1;
+	char *path = getEnvironment("$PATH");
+	char *token = strtok(path, ":");
 
-   /* walk through other tokens */
-   while( token != NULL && failure)
-   {
-      a = (char *)malloc( strlen(command) + strlen(token) + 2);
-      strcat(a, token);
-      strcat(a, "/");
-      strcat(a, command);
+	char *a;
+	int failure = 1;
 
-      //printf("%s\n", a);
-      failure = access(a, F_OK);
+	/* walk through other tokens */
+	while (token != NULL && failure)
+	{
+		a = (char *)malloc(strlen(command) + strlen(token) + 2);
+		strcat(a, token);
+		strcat(a, "/");
+		strcat(a, command);
 
-      if(failure)
-      {
-        free(a);
-        token =  strtok(NULL,":");
-      }
-   }
-   if (!failure){
-     return a;
-   }
-   else
-    return NULL;
+		//printf("%s\n", a);
+		failure = access(a, F_OK);
+
+		if (failure)
+		{
+			free(a);
+			token = strtok(NULL, ":");
+		}
+	}
+
+	printf("Out of path Seach\n");
+
+	if (!failure)
+	{
+		return a;
+	}
+	else
+		return NULL;
 }
