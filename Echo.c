@@ -21,7 +21,7 @@ char *lowerCase(char *s)
 
 void echo(tokenlist *tokens)
 {
-    printf("In Echo\n");
+    // printf("In Echo\n");
     // Check if the command is echo
     if (tokens->size > 0)
     {
@@ -51,5 +51,5 @@ void echo(tokenlist *tokens)
 
         free(cmd);
     }
-    printf("Out of Echo\n");
+    // printf("Out of Echo\n");
 }
