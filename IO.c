@@ -92,6 +92,9 @@ void redirection(tokenlist *tokens)
                 dup(fd);
                 close(fd);
 
+                tokenlist *commandList = new_tokenlist();
+                add_token(commandList, command);
+
                 // Execute the commaand
                 commandExecution(commandList);
             }
@@ -131,6 +134,11 @@ void redirection(tokenlist *tokens)
 
                     dup(fd2);
                     close(fd2);
+                    tokenlist *commandList = new_tokenlist();
+                    add_token(commandList, command);
+
+                    // Execute the command
+                    commandExecution(commandList);
 
                     // Execute the commaand
                     commandExecution(commandList);

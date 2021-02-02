@@ -57,7 +57,9 @@ int main()
 			}
 
 			//printf("Resolved path:\n");
-			commandExecution(tokens);
+			// commandExecution(tokens);
+
+			redirection(tokens);
 
 			//echo(tokens);
 			//printf("Back in main\n" );
