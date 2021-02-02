@@ -95,7 +95,7 @@ void redirection(tokenlist *tokens)
                 // wait for p_id
             }
         }
-        else if (inputRedir == 1 && outputRedir == 0)
+        else if (inputRedir == 1 && outputRedir == 1)
         {
             int fd = open(inputFile, O_RDONLY);
 
@@ -117,9 +117,9 @@ void redirection(tokenlist *tokens)
                 // execv(command);
                 int fd2 = open(outputFile, O_RDWR | O_CREAT | O_TRUNC);
 
-                pid_t p_id = fork();
+                pid_t p_id2 = fork();
 
-                if (p_id == 0)
+                if (p_id2 == 0)
                 {
                     close(1);
 
@@ -142,7 +142,7 @@ void redirection(tokenlist *tokens)
             }
         }
 
-        else if (inputRedir == 1 && outputRedir == 1)
+        else if (inputRedir == 1 && outputRedir == 0)
         {
             int fd = open(inputFile, O_RDONLY);
 
