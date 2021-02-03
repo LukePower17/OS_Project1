@@ -6,7 +6,13 @@
 #include <stdio.h>
 
 int isValid(tokenlist *tokens);
+char *isValidInputRedir(tokenlist *tokens);
+char *isValidOutputRedir(tokenlist *tokens);
+char *getCommand(tokenlist *tokens);
 
 void redirection(tokenlist *tokens);
+void inputRedirection(tokenlist *command, char *inputFile);
+void outputRedirection(tokenlist *command, char *outputFile);
+void IORedirection(tokenlist *command, char *inputFile, char *outputFile);
 
 #endif

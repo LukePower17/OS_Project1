@@ -7,8 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
-#include <stdio.h>
 
 int isValid(tokenlist *tokens)
 {
@@ -23,185 +24,165 @@ int isValid(tokenlist *tokens)
     return 0;
 }
 
+char *isValidInputRedir(tokenlist *tokens)
+{
+    char *inputFile = NULL;
+
+    for (int i = 0; i < tokens->size; i++)
+    {
+        if (strcmp(tokens->items[i], "<") == 0)
+        {
+            if (i + 1 < tokens->size)
+            {
+                inputFile = tokens->items[i + 1];
+                return inputFile;
+            }
+        }
+    }
+    return inputFile;
+}
+
+char *isValidOutputRedir(tokenlist *tokens)
+{
+
+    char *outputFile = NULL;
+
+    for (int i = 0; i < tokens->size; i++)
+    {
+        if (strcmp(tokens->items[i], ">") == 0)
+        {
+            if (i + 1 < tokens->size)
+            {
+                outputFile = tokens->items[i + 1];
+                return outputFile;
+            }
+        }
+    }
+    return outputFile;
+}
+
+char *getCommand(tokenlist *tokens)
+{
+    char *command = NULL;
+    if (tokens->size > 0)
+    {
+        command = tokens->items[0];
+        return command;
+    }
+    return command;
+}
+
 void redirection(tokenlist *tokens)
 {
-    printf("In IO\n");
+    int valid = isValid(tokens);
 
-    int value = isValid(tokens);
-
-    printf("value %d\n", value);
-
-    if (value == 1)
+    if (valid == 1)
     {
-        int inputRedir, outputRedir;
-        inputRedir = outputRedir = 0;
 
-        char *inputFile;
-        char *outputFile;
-        char *command;
+        char *inputFile = isValidInputRedir(tokens);
+        char *outputFile = isValidOutputRedir(tokens);
 
-        command = inputFile = outputFile = NULL;
+        tokenlist *command = new_tokenlist();
+        add_token(command, getCommand(tokens));
 
-        for (int i = 0; i < tokens->size; i++)
+        pid_t pid = fork();
+
+        if (pid == 0)
         {
-            if (i == 0)
+            // child process
+
+            if (inputFile != NULL && outputFile != NULL)
             {
-                command = tokens->items[i];
+                IORedirection(command, inputFile, outputFile);
             }
-            if (strcmp(tokens->items[i], "<") == 0)
+            else if (inputFile != NULL && outputFile == NULL)
             {
-                inputRedir += 1;
-
-                i++;
-                if (i < tokens->size)
-                {
-                    inputFile = tokens->items[i];
-                }
-                else
-                {
-                    printf("Error!\n");
-
-                    return;
-                }
+                outputRedirection(command, outputFile);
             }
-            else if (strcmp(tokens->items[i], ">") == 0)
+            else if (outputFile != NULL && inputFile == NULL)
             {
-                outputRedir += 1;
-
-                i++;
-                if (i < tokens->size)
-                {
-                    outputFile = tokens->items[i];
-                }
-                else
-                {
-                    printf("Error!\n");
-                    return;
-                }
+                inputRedirection(command, inputFile);
             }
         }
+    }
+}
 
-        printf("Valid\n");
-        printf("outputRedir %d", outputRedir);
-        printf("inputFile %d", inputRedir);
+void inputRedirection(tokenlist *command, char *inputFile)
+{
+    int fd;
+    int ret;
+    fd = open(inputFile, O_RDONLY);
 
-        tokenlist *commandList = new_tokenlist();
-        add_token(commandList, command);
-
-        // Then we have redirection
-        int dup(int fd);
-
-        // First priority is for < operator
-        if (inputRedir == 0 && outputRedir == 1)
-        {
-            printf("");
-            int fd = open(outputFile, O_RDWR | O_CREAT | O_TRUNC);
-
-            pid_t p_id2 = fork();
-
-            if (p_id2 == 0)
-            {
-                close(1);
-
-                dup(fd);
-                close(fd);
-
-                tokenlist *commandList = new_tokenlist();
-                add_token(commandList, command);
-
-                // Execute the commaand
-                commandExecution(commandList);
-            }
-            else
-            {
-                close(fd);
-                // wait for p_id
-            }
-        }
-        else if (inputRedir == 1 && outputRedir == 1)
-        {
-            int fd = open(inputFile, O_RDONLY);
-
-            if (fd < 0)
-            {
-                printf("Error the inputfile cannot be read");
-                exit(0);
-            }
-            pid_t p_id = fork();
-            // Closing stdin
-
-            if (p_id == 0)
-            {
-                close(0);
-                dup(fd);
-                close(fd);
-
-                // Execute the commaand
-                // execv(command);
-                int fd2 = open(outputFile, O_RDWR | O_CREAT | O_TRUNC);
-
-                pid_t p_id2 = fork();
-
-                if (p_id2 == 0)
-                {
-                    close(1);
-
-                    dup(fd2);
-                    close(fd2);
-                    tokenlist *commandList = new_tokenlist();
-                    add_token(commandList, command);
-
-                    // Execute the command
-                    commandExecution(commandList);
-
-                    // Execute the commaand
-                    commandExecution(commandList);
-
-                    // execv("/bin", command);
-                }
-                else
-                {
-                    close(fd2);
-                    // wait for p_id
-                }
-            }
-            else
-            {
-                close(fd);
-                // wait for p_id
-            }
-        }
-
-        else if (inputRedir == 1 && outputRedir == 0)
-        {
-            int fd = open(inputFile, O_RDONLY);
-
-            if (fd < 0)
-            {
-                printf("Error the inputfile cannot be read");
-                exit(0);
-            }
-            pid_t p_id = fork();
-            // Closing stdin
-
-            if (p_id == 0)
-            {
-                close(0);
-                dup(fd);
-                close(fd);
-
-                // Execute the commaand
-                commandExecution(commandList);
-            }
-            else
-            {
-                close(fd);
-                // wait for p_id
-            }
-        }
-
-        // Then >
+    if (fd < 0)
+    {
+        printf("ERROR file");
     }
 
-    printf("Out of IO\n");
+    ret = dup2(fd, STDIN_FILENO);
+
+    if (ret < 0)
+    {
+        printf("ERROR file");
+    }
+
+    commandExecution(command);
+
+    close(fd);
+}
+
+void outputRedirection(tokenlist *command, char *outputFile)
+{
+    int fd;
+    int ret;
+    fd = open(outputFile, O_CREAT | O_WRONLY);
+
+    if (fd < 0)
+    {
+        printf("ERROR file");
+    }
+
+    ret = dup2(fd, STDOUT_FILENO);
+    if (ret < 0)
+    {
+        printf("ERROR file");
+    }
+
+    commandExecution(command);
+
+    close(fd);
+}
+
+void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
+{
+    int fd1, fd2;
+    int ret1, ret2;
+
+    fd1 = open(outputFile, O_CREAT | O_WRONLY);
+    fd2 = open(inputFile, O_RDONLY);
+
+    if (fd1 < 0)
+    {
+        printf("Error with output file");
+    }
+    if (fd2 < 0)
+    {
+        printf("Error with input file");
+    }
+
+    ret1 = dup2(fd1, STDOUT_FILENO);
+    ret2 = dup2(fd2, STDIN_FILENO);
+
+    if (ret1 < 0)
+    {
+        printf("ERROR file");
+    }
+    if (ret2 < 0)
+    {
+        printf("Error inputfile");
+    }
+
+    commandExecution(command);
+
+    close(fd1);
+    close(fd2);
 }
