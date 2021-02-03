@@ -93,15 +93,18 @@ void redirection(tokenlist *tokens)
 
             if (inputFile != NULL && outputFile != NULL)
             {
+                printf("IO redirection\n");
                 IORedirection(command, inputFile, outputFile);
             }
             else if (inputFile != NULL && outputFile == NULL)
             {
-                outputRedirection(command, outputFile);
+                printf("Output redirection\n");
+                inputRedirection(command, outputFile);
             }
             else if (outputFile != NULL && inputFile == NULL)
             {
-                inputRedirection(command, inputFile);
+                printf("Input redirection\n");
+                outputRedirection(command, inputFile);
             }
         }
     }
@@ -115,14 +118,14 @@ void inputRedirection(tokenlist *command, char *inputFile)
 
     if (fd < 0)
     {
-        printf("ERROR file");
+        printf("ERROR file\n");
     }
 
     ret = dup2(fd, STDIN_FILENO);
 
     if (ret < 0)
     {
-        printf("ERROR file");
+        printf("ERROR file\n");
     }
 
     commandExecution(command);
@@ -138,13 +141,13 @@ void outputRedirection(tokenlist *command, char *outputFile)
 
     if (fd < 0)
     {
-        printf("ERROR file");
+        printf("ERROR file\n");
     }
 
     ret = dup2(fd, STDOUT_FILENO);
     if (ret < 0)
     {
-        printf("ERROR file");
+        printf("ERROR file\n");
     }
 
     commandExecution(command);
@@ -162,11 +165,11 @@ void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
 
     if (fd1 < 0)
     {
-        printf("Error with output file");
+        printf("Error with output file\n");
     }
     if (fd2 < 0)
     {
-        printf("Error with input file");
+        printf("Error with input file\n");
     }
 
     ret1 = dup2(fd1, STDOUT_FILENO);
@@ -174,11 +177,11 @@ void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
 
     if (ret1 < 0)
     {
-        printf("ERROR file");
+        printf("ERROR file\n");
     }
     if (ret2 < 0)
     {
-        printf("Error inputfile");
+        printf("Error inputfile\n");
     }
 
     commandExecution(command);
