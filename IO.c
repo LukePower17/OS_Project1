@@ -93,17 +93,17 @@ void redirection(tokenlist *tokens)
 
             if (inputFile != NULL && outputFile != NULL)
             {
-                printf("IO redirection\n");
+                printf("\nIO redirection\n");
                 IORedirection(command, inputFile, outputFile);
             }
             else if (inputFile != NULL && outputFile == NULL)
             {
-                printf("Output redirection\n");
+                printf("\nOutput redirection\n");
                 inputRedirection(command, outputFile);
             }
             else if (outputFile != NULL && inputFile == NULL)
             {
-                printf("Input redirection\n");
+                printf("\nInput redirection\n");
                 outputRedirection(command, inputFile);
             }
         }
@@ -112,20 +112,21 @@ void redirection(tokenlist *tokens)
 
 void inputRedirection(tokenlist *command, char *inputFile)
 {
+    printf("In input redirection ...\n");
     int fd;
     int ret;
     fd = open(inputFile, O_RDONLY);
 
     if (fd < 0)
     {
-        printf("ERROR file\n");
+        printf("ERROR fd file\n");
     }
 
     ret = dup2(fd, STDIN_FILENO);
 
     if (ret < 0)
     {
-        printf("ERROR file\n");
+        printf("ERROR ret file\n");
     }
 
     commandExecution(command);
@@ -135,19 +136,22 @@ void inputRedirection(tokenlist *command, char *inputFile)
 
 void outputRedirection(tokenlist *command, char *outputFile)
 {
+
+    printf("In output redirection ...\n");
+
     int fd;
     int ret;
-    fd = open(outputFile, O_CREAT | O_WRONLY);
+    fd = open(outputFile, O_CREAT | O_WRONLY | O_TRUNC);
 
     if (fd < 0)
     {
-        printf("ERROR file\n");
+        printf("ERROR fd file\n");
     }
 
     ret = dup2(fd, STDOUT_FILENO);
     if (ret < 0)
     {
-        printf("ERROR file\n");
+        printf("ERROR ret file\n");
     }
 
     commandExecution(command);
@@ -157,19 +161,21 @@ void outputRedirection(tokenlist *command, char *outputFile)
 
 void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
 {
+    printf("In io redirection ...\n");
+
     int fd1, fd2;
     int ret1, ret2;
 
-    fd1 = open(outputFile, O_CREAT | O_WRONLY);
+    fd1 = open(outputFile, O_CREAT | O_WRONLY | O_TRUNC);
     fd2 = open(inputFile, O_RDONLY);
 
     if (fd1 < 0)
     {
-        printf("Error with output file\n");
+        printf("Error with fd 1 output file\n");
     }
     if (fd2 < 0)
     {
-        printf("Error with input file\n");
+        printf("Error with fd 2 input file\n");
     }
 
     ret1 = dup2(fd1, STDOUT_FILENO);
@@ -177,11 +183,11 @@ void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
 
     if (ret1 < 0)
     {
-        printf("ERROR file\n");
+        printf("ERROR ret1\n");
     }
     if (ret2 < 0)
     {
-        printf("Error inputfile\n");
+        printf("Error ret2\n");
     }
 
     commandExecution(command);
