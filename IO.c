@@ -145,7 +145,7 @@ void outputRedirection(tokenlist *command, char *outputFile)
 
     int fd;
     int ret;
-    fd = open(outputFile, O_CREAT | O_WRONLY | O_TRUNC);
+    fd = open(outputFile, O_CREAT | O_RDWR | O_TRUNC);
 
     if (fd < 0)
     {
@@ -172,7 +172,7 @@ void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
     int fd1, fd2;
     int ret1, ret2;
 
-    fd1 = open(outputFile, O_CREAT | O_WRONLY | O_TRUNC);
+    fd1 = open(outputFile, O_CREAT | O_RDWR | O_TRUNC);
     fd2 = open(inputFile, O_RDONLY);
 
     if (fd1 < 0)
