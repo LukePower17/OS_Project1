@@ -119,21 +119,31 @@ void inputRedirection(tokenlist *command, char *inputFile)
     int ret;
     fd = open(inputFile, O_RDONLY);
 
-    if (fd < 0)
-    {
-        printf("ERROR fd file\n");
+    pid_t pid = fork();
+
+    if(pid == 0){
+        close(STDIN_FILENO);
+
+        if (fd < 0)
+        {
+            printf("ERROR fd file\n");
+        }
+
+        ret = dup2(fd, STDIN_FILENO);
+
+        if (ret < 0)
+        {
+            printf("ERROR ret file\n");
+        }
+
+        close(fd);
+        commandExecution(command);
+
     }
-
-    ret = dup2(fd, STDIN_FILENO);
-
-    if (ret < 0)
+    else
     {
-        printf("ERROR ret file\n");
+        close(fd);
     }
-
-    commandExecution(command);
-
-    close(fd);
 }
 
 void outputRedirection(tokenlist *command, char *outputFile)
@@ -145,22 +155,33 @@ void outputRedirection(tokenlist *command, char *outputFile)
 
     int fd;
     int ret;
-    fd = open(outputFile, O_CREAT | O_RDWR | O_TRUNC);
 
-    if (fd < 0)
+    fd = open(outputFile, O_CREAT | O_RDWR | O_TRUNC|0777);
+
+    pid_t pid = fork();
+
+    if(pid == 0)
     {
-        printf("ERROR fd file\n");
+        close(STDOUT_FILENO);
+
+        if (fd < 0)
+        {
+            printf("ERROR fd file\n");
+        }
+
+        ret = dup2(fd, STDOUT_FILENO);
+        if (ret < 0)
+        {
+            printf("ERROR ret file\n");
+        }
+
+        close(fd);
+        commandExecution(command);
+
     }
-
-    ret = dup2(fd, STDOUT_FILENO);
-    if (ret < 0)
-    {
-        printf("ERROR ret file\n");
+    else{
+        close(fd);
     }
-
-    commandExecution(command);
-
-    close(fd);
 }
 
 void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
@@ -172,32 +193,46 @@ void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
     int fd1, fd2;
     int ret1, ret2;
 
-    fd1 = open(outputFile, O_CREAT | O_RDWR | O_TRUNC);
+
+    fd1 = open(outputFile, O_CREAT | O_RDWR | O_TRUNC|0777);
     fd2 = open(inputFile, O_RDONLY);
 
-    if (fd1 < 0)
-    {
-        printf("Error with fd 1 output file\n");
-    }
-    if (fd2 < 0)
-    {
-        printf("Error with fd 2 input file\n");
-    }
+    pid_t pid = fork();
 
-    ret1 = dup2(fd1, STDOUT_FILENO);
-    ret2 = dup2(fd2, STDIN_FILENO);
-
-    if (ret1 < 0)
+    if(pid == 0)
     {
-        printf("ERROR ret1\n");
+        close(STDOUT_FILENO);
+        close(STDIN_FILNO);
+
+        if (fd1 < 0)
+        {
+            printf("Error with fd 1 output file\n");
+        }
+        if (fd2 < 0)
+        {
+            printf("Error with fd 2 input file\n");
+        }
+
+        ret1 = dup2(fd1, STDOUT_FILENO);
+        ret2 = dup2(fd2, STDIN_FILENO);
+
+        if (ret1 < 0)
+        {
+            printf("ERROR ret1\n");
+        }
+        if (ret2 < 0)
+        {
+            printf("Error ret2\n");
+        }
+
+        commandExecution(command);
+
+        close(fd1);
+        close(fd2);
     }
-    if (ret2 < 0)
+    else
     {
-        printf("Error ret2\n");
+        close(fd1);
+        close(fd2);
     }
-
-    commandExecution(command);
-
-    close(fd1);
-    close(fd2);
 }
