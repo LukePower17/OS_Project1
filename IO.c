@@ -96,15 +96,15 @@ void redirection(tokenlist *tokens)
                 printf("\nIO redirection\n");
                 IORedirection(command, inputFile, outputFile);
             }
-            else if (inputFile != NULL && outputFile == NULL)
+            else if (inputFile == NULL && outputFile != NULL)
             {
                 printf("\nOutput redirection\n");
-                inputRedirection(command, outputFile);
+                outputRedirection(command, outputFile);
             }
-            else if (outputFile != NULL && inputFile == NULL)
+            else if (outputFile == NULL && inputFile != NULL)
             {
                 printf("\nInput redirection\n");
-                outputRedirection(command, inputFile);
+                inputRedirection(command, inputFile);
             }
         }
     }
