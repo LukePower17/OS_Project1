@@ -113,6 +113,8 @@ void redirection(tokenlist *tokens)
 void inputRedirection(tokenlist *command, char *inputFile)
 {
     printf("In input redirection ...\n");
+    printf("inputfile: %s\n", inputFile);
+
     int fd;
     int ret;
     fd = open(inputFile, O_RDONLY);
@@ -139,6 +141,8 @@ void outputRedirection(tokenlist *command, char *outputFile)
 
     printf("In output redirection ...\n");
 
+    printf("outputfile: %s\n", outputFile);
+
     int fd;
     int ret;
     fd = open(outputFile, O_CREAT | O_WRONLY | O_TRUNC);
@@ -162,6 +166,8 @@ void outputRedirection(tokenlist *command, char *outputFile)
 void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
 {
     printf("In io redirection ...\n");
+    printf("outputfile: %s\n", outputFile);
+    printf("inputfile: %s\n", inputFile);
 
     int fd1, fd2;
     int ret1, ret2;
