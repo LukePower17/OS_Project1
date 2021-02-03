@@ -6,15 +6,18 @@
 
 void changeDir(tokenlist* tokens)
 {
-  printf("inside chdir\n");
   if(tokens->size == 1)
   {
     //change to $HOME directory
-    char* home = pathSearch("$HOME");
+    char* home = getEnvironment("$HOME");
     chdir(home);
   }
   else
   {
-
+    chdir(tokens->items[1]);
   }
+
+  char *cwd = getcwd(NULL,0);
+  setenv("PWD",cwd,1);
+  free(cwd);
 }
