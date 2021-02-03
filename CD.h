@@ -12,5 +12,7 @@
 #define CD_H
 
 void changeDir(tokenlist* tokens);
+int setenv(const char *name, const char *value, int overwrite);
+char *getcwd(char *buf, size_t size);
 
 #endif
