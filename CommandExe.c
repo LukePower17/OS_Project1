@@ -6,7 +6,7 @@
 
 void commandExecution(tokenlist *tokens)
 {
-  printf("In command Execution\n");
+  // printf("In command Execution\n");
   char *resolvedPath = pathSearch(tokens->items[0]);
 
   if (resolvedPath == NULL)
@@ -38,5 +38,5 @@ void commandExecution(tokenlist *tokens)
   {
     waitpid(pid, NULL, 0);
   }
-  printf("Out of command Execution\n");
+  // printf("Out of command Execution\n");
 }

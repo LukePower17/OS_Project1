@@ -85,28 +85,23 @@ void redirection(tokenlist *tokens)
         tokenlist *command = new_tokenlist();
         add_token(command, getCommand(tokens));
 
-        pid_t pid = fork();
 
-        if (pid == 0)
+        if (inputFile != NULL && outputFile != NULL)
         {
-            // child process
-
-            if (inputFile != NULL && outputFile != NULL)
-            {
-                printf("\nIO redirection\n");
-                IORedirection(command, inputFile, outputFile);
-            }
-            else if (inputFile == NULL && outputFile != NULL)
-            {
-                printf("\nOutput redirection\n");
-                outputRedirection(command, outputFile);
-            }
-            else if (outputFile == NULL && inputFile != NULL)
-            {
-                printf("\nInput redirection\n");
-                inputRedirection(command, inputFile);
-            }
+            printf("\nIO redirection\n");
+            IORedirection(command, inputFile, outputFile);
         }
+        else if (inputFile == NULL && outputFile != NULL)
+        {
+            printf("\nOutput redirection\n");
+            outputRedirection(command, outputFile);
+        }
+        else if (outputFile == NULL && inputFile != NULL)
+        {
+            printf("\nInput redirection\n");
+            inputRedirection(command, inputFile);
+        }
+    
     }
 }
 
@@ -122,7 +117,6 @@ void inputRedirection(tokenlist *command, char *inputFile)
     pid_t pid = fork();
 
     if(pid == 0){
-        close(STDIN_FILENO);
 
         if (fd < 0)
         {
@@ -130,6 +124,8 @@ void inputRedirection(tokenlist *command, char *inputFile)
         }
 
         ret = dup2(fd, STDIN_FILENO);
+
+        close(STDIN_FILENO);
 
         if (ret < 0)
         {
@@ -143,6 +139,7 @@ void inputRedirection(tokenlist *command, char *inputFile)
     else
     {
         close(fd);
+        // open(STDIN_FILENO);
     }
 }
 
@@ -156,13 +153,12 @@ void outputRedirection(tokenlist *command, char *outputFile)
     int fd;
     int ret;
 
-    fd = open(outputFile, O_CREAT | O_RDWR | O_TRUNC|0777);
+    fd = open(outputFile, O_CREAT | O_RDWR | O_TRUNC, 0777);
 
     pid_t pid = fork();
 
     if(pid == 0)
     {
-        close(STDOUT_FILENO);
 
         if (fd < 0)
         {
@@ -170,6 +166,9 @@ void outputRedirection(tokenlist *command, char *outputFile)
         }
 
         ret = dup2(fd, STDOUT_FILENO);
+        // close(STDOUT_FILENO);
+
+
         if (ret < 0)
         {
             printf("ERROR ret file\n");
@@ -181,6 +180,7 @@ void outputRedirection(tokenlist *command, char *outputFile)
     }
     else{
         close(fd);
+        // open(STDOUT_FILENO);
     }
 }
 
@@ -194,15 +194,13 @@ void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
     int ret1, ret2;
 
 
-    fd1 = open(outputFile, O_CREAT | O_RDWR | O_TRUNC|0777);
+    fd1 = open(outputFile, O_CREAT | O_RDWR | O_TRUNC, 0777);
     fd2 = open(inputFile, O_RDONLY);
 
     pid_t pid = fork();
 
     if(pid == 0)
     {
-        close(STDOUT_FILENO);
-        close(STDIN_FILNO);
 
         if (fd1 < 0)
         {
@@ -215,6 +213,9 @@ void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
 
         ret1 = dup2(fd1, STDOUT_FILENO);
         ret2 = dup2(fd2, STDIN_FILENO);
+
+        close(STDOUT_FILENO);
+        close(STDIN_FILENO);
 
         if (ret1 < 0)
         {
@@ -234,5 +235,7 @@ void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
     {
         close(fd1);
         close(fd2);
+        // open(STDOUT_FILENO);
+        // open(STDIN_FILNO);
     }
 }

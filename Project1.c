@@ -24,7 +24,7 @@
 
 int main()
 {
-	printf("In Project1\n");
+	// printf("In Project1\n");
 	while (1)
 	{
 		printPrompt();
@@ -67,7 +67,7 @@ int main()
 		}
 		free(input);
 	}
-	printf("Out of shell");
+	// printf("Out of shell");
 
 	return 0;
 }
