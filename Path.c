@@ -11,8 +11,8 @@ char *pathSearch(char *command)
 	char *path = getEnvironment("$PATH");
 	char *token = strtok(path, ":");
 
-	printf("path %s\n", path);
-	printf("token %s\n", token);
+	// printf("path %s\n", path);
+	// printf("token %s\n", token);
 
 	char *a;
 	int failure = 1;

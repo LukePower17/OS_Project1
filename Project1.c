@@ -24,9 +24,8 @@
 
 int main()
 {
-	// printf("In Project1\n");
 	while (1)
-	{
+	{		
 		printPrompt();
 
 		/* input contains the whole command
@@ -35,6 +34,7 @@ int main()
 
 		char *input = get_input();
 		//printf("whole input: *%s*\n", input);
+
 
 		if (input[0] != '\0')
 		{
@@ -47,8 +47,6 @@ int main()
 
 			for (int i = 0; i < tokens->size; i++)
 			{
-				//printf("token %d: (%s)\n", i, tokens->items[i]);
-
 				//checks if the first character is a '$'
 				if (tokens->items[i][0] == '$')
 				{
@@ -56,18 +54,13 @@ int main()
 				}
 			}
 
-			//printf("Resolved path:\n");
-			// commandExecution(tokens);
+			commandExecution(command);
 
-			redirection(tokens);
-
-			//echo(tokens);
-			//printf("Back in main\n" );
+			// redirection(tokens);
 			free_tokens(tokens);
 		}
 		free(input);
 	}
-	// printf("Out of shell");
 
 	return 0;
 }
