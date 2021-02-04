@@ -3,11 +3,10 @@
 //Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
 
 // #include "BackgroundProcess.h"
-// #include "CD.h"
+#include "CD.h"
 #include "CommandExe.h"
 #include "Echo.h"
 #include "EnvVariables.h"
-// #include "Exit.h"
 #include "IO.h"
 // #include "Jobs.h"
 #include "Path.h"
@@ -20,6 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 #include "tokenlist.h"
 #include "Echo.h"
 
@@ -37,6 +37,7 @@ int commandType(tokenlist* tokens);
 
 int main()
 {
+
 
 	// unordered map<cmdNum, num> Jobs
 
@@ -56,13 +57,21 @@ int main()
 	
 	while (1)
 	{		
+
+	time_t begin = time(NULL);
+	char *input;
+	int currentTime = 0;
+	int mostTime = 0;
+
+	do
+	{
+
 		printPrompt();
 
 		/* input contains the whole command
 		 * tokens contains substrings from input split by spaces
 		 */
-
-		char *input = get_input();
+		input = get_input();
 		//printf("whole input: *%s*\n", input);
 
 
@@ -84,7 +93,19 @@ int main()
 				}
 			}
 
-			// commandType(tokenlist* tokens)
+
+			//printf("Resolved path:\n");
+			currentTime = commandExecution(tokens);
+
+			if(currentTime > mostTime)
+			{
+				mostTime = currentTime;
+			}
+
+			if(strcmp(tokens->items[0],"cd") == 0)
+			{
+				changeDir(tokens);
+			}
 
 			// switch 1 ->
 			// ...
@@ -94,111 +115,115 @@ int main()
 			// redirection(tokens);
 			free_tokens(tokens);
 		}
+	}while(strcmp(input,"exit") != 0);
+
 		free(input);
-	// }
+
+		time_t end = time(NULL);
+		printf("Shell ran for %d seconds and took %d seconds to execute one command.\n", (end - begin), mostTime );
 
 	return 0;
 }
 
 
-// A '|' C '|' E F
+// // A '|' C '|' E F
 
-int commandType(tokenlist* tokens)
-{
+// int commandType(tokenlist* tokens)
+// {
 
-	// int function detects commandType 
-	// -> background process  1
-	// -> redirection         2
-	// -> built in command    3
-	// -> pipe                4
-	// -> implemented         5
-	// -> empty               0
+// 	// int function detects commandType 
+// 	// -> background process  1
+// 	// -> redirection         2
+// 	// -> built in command    3
+// 	// -> pipe                4
+// 	// -> implemented         5
+// 	// -> empty               0
 
-	// 51234
+// 	// 51234
 
-	int result = 0;
+// 	int result = 0;
 
-	if(tokens->size > 0)
-	{
-		for(int i = 0; i < tokens->size; i++)
-		{
-			if((strcmp(tokens->items[i], ">") == 0) || (strcmp(tokens->items[i], "<") == 0))
-			{
-				if(result == 0)
-				{
-					result = REDIRECTION;
-				}
-				else
-				{
-					result *= 10;
-					result += REDIRECTION;
+// 	if(tokens->size > 0)
+// 	{
+// 		for(int i = 0; i < tokens->size; i++)
+// 		{
+// 			if((strcmp(tokens->items[i], ">") == 0) || (strcmp(tokens->items[i], "<") == 0))
+// 			{
+// 				if(result == 0)
+// 				{
+// 					result = REDIRECTION;
+// 				}
+// 				else
+// 				{
+// 					result *= 10;
+// 					result += REDIRECTION;
 
-				}
+// 				}
 				
-			}
-			else if(strcmp(tokens->items[i], "|") == 0)
-			{
-				if(result == 0)
-				{
-					result = 1;
-				}
-				else
-				{
-					result *= 10;
-				}
-				result += PIPE;
-			}
-			else if(strcmp(tokens->items[i], "&") == 0)
-			{
-				if(result == 0)
-				{
-					result = ;
-				}
-				else
-				{
-					result *= 10;
-				}
-				result += BGPROCESS;
-			}
+// 			}
+// 			else if(strcmp(tokens->items[i], "|") == 0)
+// 			{
+// 				if(result == 0)
+// 				{
+// 					result = 1;
+// 				}
+// 				else
+// 				{
+// 					result *= 10;
+// 				}
+// 				result += PIPE;
+// 			}
+// 			else if(strcmp(tokens->items[i], "&") == 0)
+// 			{
+// 				if(result == 0)
+// 				{
+// 					result = ;
+// 				}
+// 				else
+// 				{
+// 					result *= 10;
+// 				}
+// 				result += BGPROCESS;
+// 			}
 
-			else if(strcmp(tokens->items[i], "$") == 0)
-			{
-				if(result == 0)
-				{
-					result = 1;
-				}
-				else
-				{
-					result *= 10;
-				}
-				result += VARIABLE;
-			}
-			else if( (strcmp(tokens->items[i], "echo") == 0) || ())
-			{
-				if(result == 0)
-				{
-					result = 1;
-				}
-				else
-				{
-					result *= 10;
-				}
-				result += VARIABLE;
-			}
-			else
-			{
-				if(result == 0)
-				{
-					result = 1;
-				}
-				else
-				{
-					result *= 10;
-				}
-				result += NORMALCOMMAND;
-			}
-		}
-	}
+// 			else if(strcmp(tokens->items[i], "$") == 0)
+// 			{
+// 				if(result == 0)
+// 				{
+// 					result = 1;
+// 				}
+// 				else
+// 				{
+// 					result *= 10;
+// 				}
+// 				result += VARIABLE;
+// 			}
+// 			else if( (strcmp(tokens->items[i], "echo") == 0) || ())
+// 			{
+// 				if(result == 0)
+// 				{
+// 					result = 1;
+// 				}
+// 				else
+// 				{
+// 					result *= 10;
+// 				}
+// 				result += VARIABLE;
+// 			}
+// 			else
+// 			{
+// 				if(result == 0)
+// 				{
+// 					result = 1;
+// 				}
+// 				else
+// 				{
+// 					result *= 10;
+// 				}
+// 				result += NORMALCOMMAND;
+// 			}
+// 		}
+// 	}
 
 
-}
+// }

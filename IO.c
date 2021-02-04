@@ -249,6 +249,7 @@ void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
             printf("please enter a valid file\n");
         }
 
+
         // redirect the filedescriptors
         ret1 = dup2(fd1, STDOUT_FILENO);
         ret2 = dup2(fd2, STDIN_FILENO);
@@ -280,5 +281,9 @@ void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
         waitpid(pid,NULL,0); 
         close(fd1);
         close(fd2);
+    }
+}
+
+        // Then >
     }
 }

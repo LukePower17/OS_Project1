@@ -4,14 +4,17 @@
 
 #include "CommandExe.h"
 
-void commandExecution(tokenlist *tokens)
+
+int commandExecution(tokenlist* tokens)
 {
-  char *resolvedPath = pathSearch(tokens->items[0]);
+  time_t begin = time(NULL);
+  char * resolvedPath = pathSearch(tokens->items[0]);
+
 
   if (resolvedPath == NULL)
   {
     printf("Error: Command not found.\n");
-    return;
+    return 0;
   }
 
   // using tokenlist as a c string container
@@ -37,4 +40,7 @@ void commandExecution(tokenlist *tokens)
   {
     waitpid(pid, NULL, 0);
   }
+  time_t end = time(NULL);
+
+  return (end - begin);
 }
