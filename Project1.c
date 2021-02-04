@@ -14,6 +14,7 @@
 #include "Piping.h"
 #include "Prompt.h"
 #include "Tilde.h"
+#include "jobStruct.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,8 +23,37 @@
 #include "tokenlist.h"
 #include "Echo.h"
 
+
+#define EMPTY 0
+#define VARIABLE 1
+#define NORMALCOMMAND 2
+#define IMPLCOMMAND 3
+#define REDIRECTION 4
+#define PIPE 5
+#define BGPROCESS 6
+
+
+int commandType(tokenlist* tokens);
+
 int main()
 {
+
+	// unordered map<cmdNum, num> Jobs
+
+	// void Jobs(set* jobs)
+		// vector<int> cmdNums
+		//loop though 
+			// if jobs->isAlive
+				// append the cmdNum
+
+		// sort cmdNums
+
+		// loop thorugh cmdNums
+		//  Jobs[cmdNum].printJOb()
+	
+
+
+	
 	while (1)
 	{		
 		printPrompt();
@@ -54,13 +84,121 @@ int main()
 				}
 			}
 
+			// commandType(tokenlist* tokens)
+
+			// switch 1 ->
+			// ...
+			// ...   background process -> 
 			commandExecution(command);
 
 			// redirection(tokens);
 			free_tokens(tokens);
 		}
 		free(input);
-	}
+	// }
 
 	return 0;
+}
+
+
+// A '|' C '|' E F
+
+int commandType(tokenlist* tokens)
+{
+
+	// int function detects commandType 
+	// -> background process  1
+	// -> redirection         2
+	// -> built in command    3
+	// -> pipe                4
+	// -> implemented         5
+	// -> empty               0
+
+	// 51234
+
+	int result = 0;
+
+	if(tokens->size > 0)
+	{
+		for(int i = 0; i < tokens->size; i++)
+		{
+			if((strcmp(tokens->items[i], ">") == 0) || (strcmp(tokens->items[i], "<") == 0))
+			{
+				if(result == 0)
+				{
+					result = REDIRECTION;
+				}
+				else
+				{
+					result *= 10;
+					result += REDIRECTION;
+
+				}
+				
+			}
+			else if(strcmp(tokens->items[i], "|") == 0)
+			{
+				if(result == 0)
+				{
+					result = 1;
+				}
+				else
+				{
+					result *= 10;
+				}
+				result += PIPE;
+			}
+			else if(strcmp(tokens->items[i], "&") == 0)
+			{
+				if(result == 0)
+				{
+					result = ;
+				}
+				else
+				{
+					result *= 10;
+				}
+				result += BGPROCESS;
+			}
+
+			else if(strcmp(tokens->items[i], "$") == 0)
+			{
+				if(result == 0)
+				{
+					result = 1;
+				}
+				else
+				{
+					result *= 10;
+				}
+				result += VARIABLE;
+			}
+			else if( (strcmp(tokens->items[i], "echo") == 0) || ())
+			{
+				if(result == 0)
+				{
+					result = 1;
+				}
+				else
+				{
+					result *= 10;
+				}
+				result += VARIABLE;
+			}
+			else
+			{
+				if(result == 0)
+				{
+					result = 1;
+				}
+				else
+				{
+					result *= 10;
+				}
+				result += NORMALCOMMAND;
+			}
+		}
+	}
+
+
 }
