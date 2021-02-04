@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "tokenlist.h"
 #include "EnvVariables.h"
+#include "Echo.h"
 #include <stdio.h>
 
 char *lowerCase(char *s)
@@ -21,6 +22,7 @@ char *lowerCase(char *s)
 
 void echo(tokenlist *tokens)
 {
+
     // Check if the command is echo
     if (tokens->size > 0)
     {
@@ -37,6 +39,7 @@ void echo(tokenlist *tokens)
                 {
                     if ((tokens->items[i])[0] == '$')
                     {
+
                         printEnvironment(tokens->items[i]);
                     }
                     else
