@@ -43,7 +43,7 @@ int main()
 
 	// void Jobs(set* jobs)
 		// vector<int> cmdNums
-		//loop though 
+		//loop though
 			// if jobs->isAlive
 				// append the cmdNum
 
@@ -51,20 +51,18 @@ int main()
 
 		// loop thorugh cmdNums
 		//  Jobs[cmdNum].printJOb()
-	
 
 
-	
-	while (1)
-	{		
+
+
+	char *input;
 
 	time_t begin = time(NULL);
-	char *input;
-	time_t currentTime = 0;
 	time_t mostTime = 0;
 
 	do
 	{
+		time_t currentTime = 0;
 
 		printPrompt();
 
@@ -114,18 +112,18 @@ int main()
 
 			// switch 1 ->
 			// ...
-			// ...   background process -> 
-			commandExecution(command);
+			// ...   background process ->
+			//commandExecution(command);
 
 			// redirection(tokens);
 			free_tokens(tokens);
 		}
 	}while(strcmp(input,"exit") != 0);
 
-		free(input);
+	free(input);
 
-		time_t end = time(NULL);
-		printf("Shell ran for %d seconds and took %d seconds to execute one command.\n", (int)(end - begin), (int)mostTime );
+	time_t end = time(NULL);
+	printf("Shell ran for %d seconds and took %d seconds to execute one command.\n", (int)(end - begin), (int)mostTime );
 
 	return 0;
 }
@@ -136,7 +134,7 @@ int main()
 // int commandType(tokenlist* tokens)
 // {
 
-// 	// int function detects commandType 
+// 	// int function detects commandType
 // 	// -> background process  1
 // 	// -> redirection         2
 // 	// -> built in command    3
@@ -164,7 +162,7 @@ int main()
 // 					result += REDIRECTION;
 
 // 				}
-				
+
 // 			}
 // 			else if(strcmp(tokens->items[i], "|") == 0)
 // 			{
