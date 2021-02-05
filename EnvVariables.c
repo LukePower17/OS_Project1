@@ -11,9 +11,6 @@ void printEnvironment(char *name)
 
 char *getEnvironment(char *name)
 {
-
-  char *value = getenv(name + 1);
-
   char *str = NULL;
 
   if (getenv(name + 1) != NULL)
