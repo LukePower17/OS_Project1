@@ -1,11 +1,17 @@
+// Comment test
+
 #include "IO.h"
+#include "tokenlist.h"
+#include "CommandExe.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
-#include <stdio.h>
 
+// Checks if the set of tokens has IO (> or <) in it
 int isValid(tokenlist *tokens)
 {
     for (int i = 0; i < tokens->size; i++)
@@ -19,163 +25,264 @@ int isValid(tokenlist *tokens)
     return 0;
 }
 
-void redirection(tokenlist *tokens)
+// Checks if the set of tokens has a valid input redirection
+// returns inputfile (null if there is no inputfile)
+char *isValidInputRedir(tokenlist *tokens)
+{
+    char *inputFile = NULL;
+
+    for (int i = 0; i < tokens->size; i++)
+    {
+        if (strcmp(tokens->items[i], "<") == 0)
+        {
+            if (i + 1 < tokens->size)
+            {
+                inputFile = tokens->items[i + 1];
+                return inputFile;
+            }
+        }
+    }
+    return inputFile;
+}
+
+// Checks if the set of tokens has a valid input redirection
+// returns inputfile (null if there is no inputfile)
+char *isValidOutputRedir(tokenlist *tokens)
 {
 
-    int value = isValid(tokens);
+    char *outputFile = NULL;
 
-    if (value == 1)
+    for (int i = 0; i < tokens->size; i++)
     {
-        int inputRedir, outputRedir;
-        inputRedir = outputRedir = 0;
-
-        char *inputFile;
-        char *outputFile;
-        char *command;
-
-        command = inputFile = outputFile = NULL;
-
-        for (int i = 0; i < tokens->size; i++)
+        if (strcmp(tokens->items[i], ">") == 0)
         {
-            if (i == 0)
+            if (i + 1 < tokens->size)
             {
-                command = tokens->items[i];
-            }
-            if (strcmp(tokens->items[i], "<") == 0)
-            {
-                inputRedir += 1;
-
-                i++;
-                if (i < tokens->size)
-                {
-                    inputFile = tokens->items[i];
-                }
-                else
-                {
-                    return;
-                }
-            }
-            else if (strcmp(tokens->items[i], ">") == 0)
-            {
-                outputRedir += 1;
-
-                i++;
-                if (i < tokens->size)
-                {
-                    outputFile = tokens->items[i];
-                }
-                else
-                {
-                    return;
-                }
+                outputFile = tokens->items[i + 1];
+                return outputFile;
             }
         }
+    }
+    return outputFile;
+}
 
-        tokenlist *commandList = new_tokenlist();
-        add_token(commandList, command);
-
-        // Then we have redirection
-        int dup(int fd);
-
-        // First priority is for < operator
-        if (inputRedir == 0 && outputRedir == 1)
+// Gets the complete command given a tokenlist
+void getCommand(tokenlist* command, tokenlist *tokens)
+{
+    if (tokens->size > 0)
+    {
+        for(int i = 0; i < tokens->size; i++)
         {
-            int fd = open(outputFile, O_RDWR | O_CREAT | O_TRUNC);
-
-            pid_t p_id = fork();
-
-            if (p_id == 0)
+            if(strcmp(tokens->items[i], ">") == 0 || strcmp(tokens->items[i], "<") == 0)
             {
-                close(1);
-
-                dup(fd);
-                close(fd);
-
-                // Execute the commaand
-                commandExecution(commandList);
+                break;
             }
             else
             {
-                close(fd);
-                // wait for p_id
+                add_token(command, tokens->items[i]);
             }
         }
-        else if (inputRedir == 1 && outputRedir == 1)
+    }
+}
+
+// Does all the redirection
+void redirection(tokenlist *tokens)
+{
+    int valid = isValid(tokens);
+
+    if (valid == 1)
+    {
+
+        char *inputFile = isValidInputRedir(tokens);
+        char *outputFile = isValidOutputRedir(tokens);
+
+        tokenlist *command = new_tokenlist();
+
+        getCommand(command, tokens);
+
+        // If we need to perform both input and output redirection
+        if (inputFile != NULL && outputFile != NULL)
         {
-            int fd = open(inputFile, O_RDONLY);
-
-            if (fd < 0)
-            {
-                printf("Error the inputfile cannot be read");
-                exit(0);
-            }
-            pid_t p_id = fork();
-            // Closing stdin
-
-            if (p_id == 0)
-            {
-                close(0);
-                dup(fd);
-                close(fd);
-
-                // Execute the commaand
-                // execv(command);
-                int fd2 = open(outputFile, O_RDWR | O_CREAT | O_TRUNC);
-
-                pid_t p_id2 = fork();
-
-                if (p_id2 == 0)
-                {
-                    close(1);
-
-                    dup(fd2);
-                    close(fd2);
-
-                    // Execute the commaand
-                    commandExecution(commandList);
-
-                    // execv("/bin", command);
-                }
-                else
-                {
-                    close(fd2);
-                    // wait for p_id
-                }
-            }
-            else
-            {
-                close(fd);
-                // wait for p_id
-            }
+            IORedirection(command, inputFile, outputFile);
         }
 
-        else if (inputRedir == 1 && outputRedir == 0)
+        // else if we only need to do output redirection
+        else if (inputFile == NULL && outputFile != NULL)
         {
-            int fd = open(inputFile, O_RDONLY);
-
-            if (fd < 0)
-            {
-                printf("Error the inputfile cannot be read");
-                exit(0);
-            }
-            pid_t p_id = fork();
-            // Closing stdin
-
-            if (p_id == 0)
-            {
-                close(0);
-                dup(fd);
-                close(fd);
-
-                // Execute the commaand
-                commandExecution(commandList);
-            }
-            else
-            {
-                close(fd);
-                // wait for p_id
-            }
+            outputRedirection(command, outputFile);
         }
+
+        // if we only need to perform input redirection
+        else if (outputFile == NULL && inputFile != NULL)
+        {
+            inputRedirection(command, inputFile);
+        }
+    
+    }
+}
+
+// Does input redirection
+void inputRedirection(tokenlist *command, char *inputFile)
+{
+
+    int fd; // stores the file id
+    int ret;
+
+    // open the file with Read Only flag
+    fd = open(inputFile, O_RDONLY);
+
+    // fork
+    pid_t pid = fork();
+
+
+    if(pid == 0)
+    {
+        // Child process
+        if (fd < 0)
+        {
+            printf("FILE DOES NOT EXIST!!!\n");
+            printf("please enter a valid file\n");
+            exit(0);
+
+        }
+
+        // redirect the file despritor
+        ret = dup2(fd, STDIN_FILENO);
+
+        // if we have an error we quit
+        if (ret < 0)
+        {
+            exit(0);
+        }
+
+        // close the file descriptor
+        close(fd);
+
+        // exectue the command
+        commandExecution(command);
+
+        // exit afterwards
+        exit(0);
+    }
+    else
+    {
+        // Wait till the child process is finished
+        waitpid(pid,NULL,0); 
+        // close the file descriptor
+        close(fd);
+
+    }
+}
+// Does output redirection
+void outputRedirection(tokenlist *command, char *outputFile)
+{
+
+    int fd; // stores the file id
+    int ret;
+
+
+    // open the file
+    // if it does not exist we create a file
+    fd = open(outputFile, O_CREAT | O_RDWR | O_TRUNC, 0777);
+
+    // fork
+    pid_t pid = fork();
+
+    if(pid == 0)
+    {
+        // Child process
+        if (fd < 0)
+        {
+            printf("ERROR fd file\n");
+            exit(0);
+        }
+
+        // redirect the file despritor
+        ret = dup2(fd, STDOUT_FILENO);
+
+        // if we have an error we quit
+        if (ret < 0)
+        {
+            printf("ERROR ret file\n");
+        }
+
+        // close the desriptor
+        close(fd);
+
+        // execute the command
+        commandExecution(command);
+        
+        // exit
+        exit(0);
+
+    }
+    else
+    {
+        // wait till childs process is done
+        waitpid(pid,NULL,0); 
+        close(fd);
+    }
+}
+// IO redirection for both input and output redirecton
+void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
+{
+
+    int fd1, fd2; // fd1 is for output file // fd2 output file
+    int ret1, ret2;
+
+
+    fd1 = open(outputFile, O_CREAT | O_RDWR | O_TRUNC, 0777);
+    fd2 = open(inputFile, O_RDONLY);
+
+    pid_t pid = fork();
+
+    if(pid == 0)
+    {
+
+        if (fd1 < 0)
+        {
+            printf("Error with fd 1 output file\n");
+        }
+        if (fd2 < 0)
+        {
+            printf("FILE DOES NOT EXIST!!!\n");
+            printf("please enter a valid file\n");
+        }
+
+
+        // redirect the filedescriptors
+        ret1 = dup2(fd1, STDOUT_FILENO);
+        ret2 = dup2(fd2, STDIN_FILENO);
+
+        // if we have an errroe we print them
+        if (ret1 < 0)
+        {
+            printf("ERROR\n");
+            exit(0);
+        }
+        if (ret2 < 0)
+        {
+            printf("Error\n");
+            exit(0);
+        }
+
+        // close the file desriptors
+        close(fd1);
+        close(fd2);
+
+        // execute the command
+        commandExecution(command);
+        exit(0);
+
+    }
+    else
+    {
+        // wait till child process is done
+        waitpid(pid,NULL,0); 
+        close(fd1);
+        close(fd2);
+    }
+}
 
         // Then >
     }
