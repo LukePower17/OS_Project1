@@ -60,8 +60,8 @@ int main()
 
 	time_t begin = time(NULL);
 	char *input;
-	int currentTime = 0;
-	int mostTime = 0;
+	time_t currentTime = 0;
+	time_t mostTime = 0;
 
 	do
 	{
@@ -97,6 +97,11 @@ int main()
 			//printf("Resolved path:\n");
 			currentTime = commandExecution(tokens);
 
+			// for (int i = 0; i < tokens->size; i++)
+			// {
+			// 	printf("token %d: (%s)\n", i, tokens->items[i]);
+			// }
+
 			if(currentTime > mostTime)
 			{
 				mostTime = currentTime;
@@ -120,7 +125,7 @@ int main()
 		free(input);
 
 		time_t end = time(NULL);
-		printf("Shell ran for %d seconds and took %d seconds to execute one command.\n", (end - begin), mostTime );
+		printf("Shell ran for %d seconds and took %d seconds to execute one command.\n", (int)(end - begin), (int)mostTime );
 
 	return 0;
 }
