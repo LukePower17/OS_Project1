@@ -14,14 +14,14 @@
 #include "Prompt.h"
 #include "Tilde.h"
 #include "jobStruct.h"
+#include "tokenlist.h"
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
-#include "tokenlist.h"
-#include "Echo.h"
 
 
 #define EMPTY 0
@@ -110,7 +110,7 @@ int main()
 			// switch 1 ->
 			// ...
 			// ...   background process -> 
-			commandExecution(command);
+			// commandExecution(command);
 
 			// redirection(tokens);
 			free_tokens(tokens);
