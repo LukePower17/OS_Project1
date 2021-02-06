@@ -73,3 +73,19 @@ void free_tokens(tokenlist *tokens)
 	free(tokens->items);
 	free(tokens);
 }
+
+tokenlist *copy_tokenlist(tokenlist *tokens){
+  tokenlist* copy = new_tokenlist();
+  for (int i = 0; i < tokens->size; i++){
+    add_token(copy, tokens->items[i]);
+  }
+  return copy;
+}
+
+void print_tokens(tokenlist * tokens)
+{
+	for(int i = 0; i < tokens->size; i++)
+		printf("%s ", tokens->items[i]);
+
+	printf("\n");
+}

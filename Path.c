@@ -7,13 +7,8 @@
 char *pathSearch(char *command)
 {
 
-
-
 	char *path = getEnvironment("$PATH");
 	char *token = strtok(path, ":");
-
-	// printf("path %s\n", path);
-	// printf("token %s\n", token);
 
 	char *a;
 	int failure = 1;
@@ -22,11 +17,10 @@ char *pathSearch(char *command)
 	while (token != NULL && failure)
 	{
 		a = (char *)malloc(strlen(command) + strlen(token) + 2);
-		strcat(a, token);
+		strcpy(a, token);
 		strcat(a, "/");
 		strcat(a, command);
 
-		//printf("%s\n", a);
 		failure = access(a, F_OK);
 
 		if (failure)
@@ -37,9 +31,7 @@ char *pathSearch(char *command)
 	}
 
 	if (!failure)
-	{
 		return a;
-	}
 	else
 		return NULL;
 }

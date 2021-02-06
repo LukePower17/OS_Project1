@@ -42,7 +42,7 @@ int commandExecution(tokenlist* tokens)
   }
   free_tokens(args);
   free(resolvedPath);
-  
+
   time_t end = time(NULL);
 
   return (end - begin);
