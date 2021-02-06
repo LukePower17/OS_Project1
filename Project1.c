@@ -91,14 +91,7 @@ int main()
 				}
 			}
 
-
-			//printf("Resolved path:\n");
 			currentTime = commandExecution(tokens);
-
-			// for (int i = 0; i < tokens->size; i++)
-			// {
-			// 	printf("token %d: (%s)\n", i, tokens->items[i]);
-			// }
 
 			if(currentTime > mostTime)
 			{
@@ -109,6 +102,8 @@ int main()
 			{
 				changeDir(tokens);
 			}
+
+			//doPipe(tokens);
 
 			// switch 1 ->
 			// ...
