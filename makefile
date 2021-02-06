@@ -6,8 +6,8 @@ COM=$(CC) $(CFLAGS)
 # general use command for compilation
 # maps to the compiler code and flags listed above
 
-DEP=Project1.o tokenlist.o EnvVariables.o Echo.o Prompt.o Path.o \
-		CommandExe.o CD.o
+DEP=Project1.o tokenlist.o tokenlist2d.o EnvVariables.o Echo.o Prompt.o Path.o \
+		CommandExe.o CD.o Piping.o
 # to reference our dependency list throughout the shell command
 
 all: shell
@@ -20,6 +20,9 @@ Project1.o: Project1.c
 
 tokenlist.o: tokenlist.c tokenlist.h
 	$(COM) -c tokenlist.c
+
+tokenlist2d.o: tokenlist2d.c tokenlist2d.h
+	$(COM) -c tokenlist2d.c
 
 EnvVariables.o: EnvVariables.c EnvVariables.h
 	$(COM) -c EnvVariables.c
@@ -38,6 +41,9 @@ CommandExe.o: CommandExe.c CommandExe.h
 
 CD.o: CD.c CD.h
 	$(COM) -c CD.c
+
+Piping.o: Piping.c Piping.h
+	$(COM) -c Piping.c
 
 clean:
 	rm *.o shell
