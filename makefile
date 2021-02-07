@@ -24,6 +24,9 @@ BackgroundProcess.o: BackgroundProcess.c BackgroundProcess.h
 jobStruct.o: jobStruct.c jobStruct.h
 	$(COM) -c jobStruct.c
 
+jobVector.o: jobVector.c jobVector.h
+	$(COM) -c jobVector.c
+
 tokenlist.o: tokenlist.c tokenlist.h
 	$(COM) -c tokenlist.c
 

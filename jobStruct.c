@@ -2,6 +2,12 @@
 #include <string.h>
 #include "tokenlist.h"
 
+jobStruct* copyJob(jobStruct* job)
+{
+    jobStruct* result = makejob(job->cmdNum, job->pid, job->tokens);
+    return result;
+
+}
 jobStruct* newJob(void)
 {
     jobStruct* job = (jobStruct *)malloc(sizeof(jobStruct));
@@ -24,7 +30,12 @@ jobStruct* makejob(int cmdNum, pid_t pid, tokenlist* tokens)
     job->cmdNum = cmdNum;
     job->pid = pid;
 
-    job->command = copy_tokenlist(tokens);
+    job->command = new_tokenlist();
+    for (int i = 0; i < tokens->size; i++)
+    {
+        add_token(job->command, tokens->items[i]);
+    }
+    // copy_tokenlist(tokens);
 
 
     return job;

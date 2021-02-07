@@ -8,6 +8,7 @@
 #include "EnvVariables.h"
 #include "IO.h"
 // #include "Jobs.h"
+#include "jobVector.h"
 #include "BackgroundProcess.h"
 #include "Path.h"
 #include "Piping.h"
@@ -61,8 +62,7 @@ int main()
 	time_t mostTime = 0;
 
 	int BGProcessNum = 0;
-	// pid_t* bgjobs = NULL;
-
+	jobVector* jobsList = new_jobVector();
 
 	do
 	{
@@ -70,6 +70,19 @@ int main()
 
 
 		// Check if any job is complete
+		for(int i = 0; i < jobList->curSize; i++)
+		{
+			jobStruct* job = jobList->array[i];
+			pid_t pidJob = job->pid;
+
+			pid_t status = waitpid(pidJob, NULL, WNOHANG);
+			if(status != 0)
+			{
+				// process is finished
+				printDone(jobList->array[i]);
+				
+			}
+		}
 		// from the map
 		printPrompt();
 
@@ -102,6 +115,7 @@ int main()
 
 			if(isBGProcess == 1)
 			{
+				printf("\nThis is a background process\n");
 				tokenlist* command = getCommandFromBGProcess(tokens);
 
 				// add the pid to map
@@ -116,7 +130,9 @@ int main()
 				}
 				printJob(job);
 
-				freeJob(job);
+				appendElement(jobList, job);
+
+				// freeJob(job);
 				BGProcessNum++;
 				free_tokens(command);
 			}
