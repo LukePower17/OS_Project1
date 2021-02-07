@@ -2,53 +2,121 @@
 
 void doPipe(tokenlist *tokens){
 
-  printf("Do Pipe\n");
-  int pipes = 0;
-  int start = 0, end = 0;
+  int numPipe = num_pipes(tokens);
 
-  tokenlist2d * commands = new_tokenlist2d();
+  if (numPipe == 0)
+    return;
 
-  while(end < tokens->size )
-  {
-    printf("%d, %d\n", start, end);
-    if (strcmp(tokens->items[end], "|") == 0 || end + 1 == tokens->size)
+  tokenlist2d * commands = parse_tokenlist(tokens, 0);
+
+  if (commands == NULL)
+    return;
+
+  if (commands->size != numPipe + 1)
+    return;
+
+  print_list2d(commands);
+  printf("numPipes: %d,\nCommands: %d\n", numPipe, commands->size);
+
+
+  // need to do commands == 3, which means 2 pipes
+  if (commands->size == 2){
+    int p_fds[2];
+    // slot 0 is output
+    // slot 1 is input
+    pipe(p_fds);
+
+    // 0 in
+    // 1 stdout
+    // 2 stderr
+    // pfds[0]
+    // pfds[1]
+
+    int pid1 = fork();
+    if (pid1 == 0)
     {
-      if (end + 1 == tokens->size)
-        end++;  // get substring from start up to tokens->size
-      else
-        pipes++;
+      close(1);  // close stdout
+      dup(p_fds[1]); // redirect output to slot 1
 
-      tokenlist *command = some_tokens(tokens, start, end);
+      // close extra spots
+      close(3);
+      close(4);
 
-      print_tokens(command);
-      add_list(commands, command);
-      free_tokens(command);
-
-      end++;
-      start = end;
+      commandExecution(commands->lists[0]);
+      exit(1);
     }
-    else
-      end++;
+    int pid2 = fork();
+    if (pid2 == 0)
+    {
+      close(0); // close input
+      dup(p_fds[0]);
+      close(3);
+      close(4);
+
+      commandExecution(commands->lists[1]);
+      exit(1);
+    }
+    close(p_fds[0]);
+    close(p_fds[1]);
+    waitpid(pid1, NULL, 0);
+    waitpid(pid2, NULL, 0);
   }
-
-  //print_list2d(commands);
-  printf("Pipes: %d\nCommands: %d\n", pipes, commands->size);
-
-  //int p_fds[2];
-  // 0 is output of the pipe
-  // 1 is input of the pipe
-  //pipe(p_fds);
-
-
   free_lists(commands);
-  //printf("Exit pipe\n");
 }
 
-tokenlist * some_tokens(tokenlist *tokens, int start, int end)
+int num_pipes(tokenlist * tokens)
 {
-  tokenlist *result = new_tokenlist();
-  for (int i = start; i < end; i++){
-    add_token(result, tokens->items[i]);
+  int count = 0;
+  for(int i = 0; i < tokens->size; i++)
+  {
+    if(!strcmp(tokens->items[i], "|"))
+      count++;
   }
-  return result;
+  return count;
 }
+
+// int ** p_fds = (int**)malloc(sizeof(int *) * pipes);
+// int * pids = (int*)malloc(sizeof(int) * commands->size);
+//
+// for(int i = 0; i < pipes; i++)
+//   p_fds[i] = (int*) malloc(sizeof(int) * 2);
+//
+// for(int i = 0; i < commands->size; i++)
+// {
+//   if (i + 1 != commands->size)  // if there is a next command
+//   {
+//     pipe(p_fds[(i+1)/2]);
+//   }
+//   int pid = fork();
+//   if (pid == 0)
+//   {
+//     if (i - 1 >= 0) // there is a previous command
+//     {
+//       dup2(p_fds[i/2][0], 0);
+//       close(p_fds[i/2][0]);
+//       close(p_fds[i/2][1]);
+//     }
+//     if (i + 1 != commands->size)  // there is a next command
+//     {
+//       close(p_fds[(i+1)/2][0]);
+//       dup2(p_fds[(i+1)/2][1], 1);
+//       close(p_fds[(i+1)/2][1]);
+//     }
+//     commandExecution(commands->lists[i]);
+//     exit(1);
+//   }
+//   else
+//   {
+//     if (i - 1 >= 0)
+//     {
+//       close(p_fds[(i+1)/2][0]);
+//       close(p_fds[(i+1)/2][1]);
+//     }
+//   }
+// }
+
+// for(int i = 0; i < pipes; i++)
+// {
+//   close(p_fds[i][0]);
+//   close(p_fds[i][1]);
+// }

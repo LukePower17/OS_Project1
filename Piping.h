@@ -11,9 +11,12 @@
 #include "tokenlist.h"
 #include "tokenlist2d.h"
 #include "string.h"
+#include "CommandExe.h"
 
 void doPipe(tokenlist* command);
+int pipe_format(tokenlist *tokens);
 
 tokenlist *some_tokens(tokenlist *tokens, int start, int end);
+int num_pipes(tokenlist * tokens);
 
 #endif
