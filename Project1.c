@@ -103,7 +103,7 @@ int main()
 				changeDir(tokens);
 			}
 
-			//doPipe(tokens);
+			doPipe(tokens);
 
 			// switch 1 ->
 			// ...

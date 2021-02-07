@@ -11,6 +11,10 @@ typedef struct {
 
 
 tokenlist2d *new_tokenlist2d(void);
+
+tokenlist2d *parse_tokenlist(tokenlist * tokens, int storeDelims);
+tokenlist * some_tokens(tokenlist *tokens, int start, int end);
+
 void add_list(tokenlist2d * list2d, tokenlist *list);
 void free_lists(tokenlist2d * list2d);
 
