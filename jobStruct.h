@@ -6,18 +6,20 @@
 #include <sys/types.h>
 #include <stdlib.h>
 #include <string.h>
-typedef struct{
-    int cmdNum;
-    char* name;
-    int isRunning; // 0 is dead 1 if running
-    int timeTaken;
-    pid_t pid;
 
+#include "tokenlist.h"
+
+typedef struct{
+    pid_t pid;
+    int cmdNum;
+    tokenlist* command;
 } jobStruct;
 
 
 jobStruct* newJob(void);
-jobStruct* makejob(int cmdNum, char* name, int isRunning, pid_t pid);
+char* getCommandJob(tokenlist* tokens);
+void printDone(jobStruct* job);
+jobStruct* makejob(int cmdNum, pid_t pid, tokenlist* command);
 void printJob(jobStruct* job);
 void freeJob(jobStruct* job);
 

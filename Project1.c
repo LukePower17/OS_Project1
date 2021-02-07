@@ -2,13 +2,13 @@
 //COP4610
 //Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
 
-// #include "BackgroundProcess.h"
 #include "CD.h"
 #include "CommandExe.h"
 #include "Echo.h"
 #include "EnvVariables.h"
 #include "IO.h"
 // #include "Jobs.h"
+#include "BackgroundProcess.h"
 #include "Path.h"
 #include "Piping.h"
 #include "Prompt.h"
@@ -60,10 +60,17 @@ int main()
 	time_t begin = time(NULL);
 	time_t mostTime = 0;
 
+	int BGProcessNum = 0;
+	// pid_t* bgjobs = NULL;
+
+
 	do
 	{
 		time_t currentTime = 0;
 
+
+		// Check if any job is complete
+		// from the map
 		printPrompt();
 
 		/* input contains the whole command
@@ -91,7 +98,32 @@ int main()
 				}
 			}
 
-			currentTime = commandExecution(tokens);
+			int isBGProcess= isBackgroundProcess(tokens);
+
+			if(isBGProcess == 1)
+			{
+				tokenlist* command = getCommandFromBGProcess(tokens);
+
+				// add the pid to map
+
+				pid_t pid = fork();
+				jobStruct* job = makejob(BGProcessNum, pid, command);
+
+				if(pid == 0)
+				{
+					currentTime = commandExecution(command);
+					exit(0);
+				}
+				printJob(job);
+
+				freeJob(job);
+				BGProcessNum++;
+				free_tokens(command);
+			}
+			else
+			{
+				currentTime = commandExecution(tokens);
+			}
 
 			if(currentTime > mostTime)
 			{
@@ -125,10 +157,6 @@ int main()
 
 
 // // A '|' C '|' E F
-
-// int commandType(tokenlist* tokens)
-// {
-
 // 	// int function detects commandType
 // 	// -> background process  1
 // 	// -> redirection         2
@@ -136,92 +164,3 @@ int main()
 // 	// -> pipe                4
 // 	// -> implemented         5
 // 	// -> empty               0
-
-// 	// 51234
-
-// 	int result = 0;
-
-// 	if(tokens->size > 0)
-// 	{
-// 		for(int i = 0; i < tokens->size; i++)
-// 		{
-// 			if((strcmp(tokens->items[i], ">") == 0) || (strcmp(tokens->items[i], "<") == 0))
-// 			{
-// 				if(result == 0)
-// 				{
-// 					result = REDIRECTION;
-// 				}
-// 				else
-// 				{
-// 					result *= 10;
-// 					result += REDIRECTION;
-
-// 				}
-
-// 			}
-// 			else if(strcmp(tokens->items[i], "|") == 0)
-// 			{
-// 				if(result == 0)
-// 				{
-// 					result = 1;
-// 				}
-// 				else
-// 				{
-// 					result *= 10;
-// 				}
-// 				result += PIPE;
-// 			}
-// 			else if(strcmp(tokens->items[i], "&") == 0)
-// 			{
-// 				if(result == 0)
-// 				{
-// 					result = ;
-// 				}
-// 				else
-// 				{
-// 					result *= 10;
-// 				}
-// 				result += BGPROCESS;
-// 			}
-
-// 			else if(strcmp(tokens->items[i], "$") == 0)
-// 			{
-// 				if(result == 0)
-// 				{
-// 					result = 1;
-// 				}
-// 				else
-// 				{
-// 					result *= 10;
-// 				}
-// 				result += VARIABLE;
-// 			}
-// 			else if( (strcmp(tokens->items[i], "echo") == 0) || ())
-// 			{
-// 				if(result == 0)
-// 				{
-// 					result = 1;
-// 				}
-// 				else
-// 				{
-// 					result *= 10;
-// 				}
-// 				result += VARIABLE;
-// 			}
-// 			else
-// 			{
-// 				if(result == 0)
-// 				{
-// 					result = 1;
-// 				}
-// 				else
-// 				{
-// 					result *= 10;
-// 				}
-// 				result += NORMALCOMMAND;
-// 			}
-// 		}
-// 	}
-
-
-// }

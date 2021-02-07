@@ -67,7 +67,7 @@ char *isValidOutputRedir(tokenlist *tokens)
 }
 
 // Gets the complete command given a tokenlist
-void getCommand(tokenlist* command, tokenlist *tokens)
+void getCommandIO(tokenlist* command, tokenlist *tokens)
 {
     if (tokens->size > 0)
     {
@@ -98,7 +98,7 @@ void redirection(tokenlist *tokens)
 
         tokenlist *command = new_tokenlist();
 
-        getCommand(command, tokens);
+        getCommandIO(command, tokens);
 
         // If we need to perform both input and output redirection
         if (inputFile != NULL && outputFile != NULL)
