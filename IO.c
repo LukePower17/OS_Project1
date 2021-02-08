@@ -287,4 +287,3 @@ void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
 }
 
         // Then >
-    

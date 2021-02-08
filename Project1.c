@@ -41,7 +41,7 @@ int main()
 	int exits = 0;
 
 	do
-	{	
+	{
 		// printf("mostTIme %d\n", mostTime);
 		// printJobVector(jobList);
 		// from the map
@@ -69,7 +69,7 @@ int main()
 		input = get_input();
 		//printf("whole input: *%s*\n", input);
 
-		
+
 		if (input[0] != '\0' && strcmp(input, "exit") != 0)
 		{
 			/*
@@ -80,7 +80,7 @@ int main()
 			tokenlist *tokens = get_tokens(input);
 
 			// tokenlist2d = Parse
-			
+
 			for (int i = 0; i < tokens->size; i++)
 			{
 				//checks if the first character is a '$'
@@ -97,7 +97,7 @@ int main()
 			tokenlist* expandedTilde = expandTilde(tokens);
 			free_tokens(tokens);
 			tokens = expandedTilde;
-			
+
 			// print_tokens(tokens);
 
 			int isBGProcess= isBackgroundProcess(tokens);
@@ -111,8 +111,8 @@ int main()
 				jobStruct* job = makejob(BGProcessNum, pid, command);
 
 				if(pid == 0)
-				{					
-					currentTime = execute(command);	
+				{
+					currentTime = execute(command);
 					exit(0);
 				}
 				printJob(job);
@@ -138,7 +138,7 @@ int main()
 
 			free_tokens(tokens);
 		}
-		
+
 
 		if(strcmp(input,"exit") == 0 && runningCommandExists(jobList) == 1)
 		{
@@ -154,7 +154,7 @@ int main()
 		free_jobVector(jobList);
 	if(input != NULL)
 		free(input);
-	
+
 	time_t end = time(NULL);
 	printf("Shell ran for %d seconds and took %d seconds to execute one command.\n", (int)(end - begin), (int)(mostTime) );
 	return 0;
