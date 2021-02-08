@@ -24,6 +24,9 @@ typedef struct{
 
 jobStruct* newJob(void);
 jobStruct* makejob(int cmdNum, pid_t pid ,tokenlist* command);
+jobStruct* copyJob(jobStruct* job);
+char* getCommandJob(tokenlist* tokens);
+
 void printJob(jobStruct* job);
 void printDone(jobStruct* job);
 void freeJob(jobStruct* job);

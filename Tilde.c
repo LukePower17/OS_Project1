@@ -4,60 +4,65 @@
 #include <string.h>
 #include <pwd.h>
 #include "EnvVariables.h"
+#include "Tilde.h"
+#include "tokenlist.h"
+
 
 int hasTilde(tokenlist* tokens)
 {
     for(int i = 0; i < tokens->size; i++)
     {
-        if(strcmp(tokens->items[i], "~") == 0)
-        {
+        if( (tokens->items[i])[0] == '~')
             return 1;
-        }
-        if(strcmp(tokens->items[i], "~+") == 0)
-        {
-            return 2;
-        }
-        if(strcmp(tokens->items[i], "~-") == 0)
-        {
-            return 3;
-        }
     }
     return 0;
 }
 
-void expandTilde(tokenlist* tokens)
+
+char* expandTildeToken(char* token)
 {
-    int val = hasTilde(tokens);
+    char* tilde = (char*) malloc( strlen(getTilde()) + 1 + strlen(token));
+    
+    strcpy(tilde, ""); 
+    if(strlen(token) >= 1){
 
-    if(val == 0)
-    {
-        // Do nothing
+        if(token[0] == '~')
+        {
+            strcat(tilde, getTilde());   
+        }
+        strcat(tilde, token+1);
     }
-    else if(val == 1)
-    {
-
-
-    }
-    else if(val == 2)
-    {
-
-    }
-    else if(val == 3)
-    {
-
-    }
+    return tilde;
 }
-char *getTilde(tokenlist* tokens)
+
+tokenlist* expandTilde(tokenlist* tokens)
 {
+    tokenlist* result = new_tokenlist();
 
-    char *result = NULL;
-
-    result = getenv("$HOME");
-
-    if (result == NULL)
+    for(int i = 0; i < tokens->size; i++)
     {
-        result = getpwuid(getuid())->pw_dir;
+        if(tokens->items[i][0] == '~')
+        {
+            char* tilde = expandTildeToken(tokens->items[i]);
+
+            add_token(result, tilde);
+            free(tilde);
+        }
+        else
+        {
+            add_token(result, tokens->items[i]);
+        }
     }
 
     return result;
 }
+
+char *getTilde()
+{
+    char *result = NULL;
+    result = getEnvironment("$HOME");
+    return result;
+}
+
+
+

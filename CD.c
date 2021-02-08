@@ -3,9 +3,11 @@
 //Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
 
 #include "CD.h"
+#include <time.h>
 
-void changeDir(tokenlist* tokens)
+int changeDir(tokenlist* tokens)
 {
+  time_t begin = time(NULL);
   if(tokens->size == 1)
   {
     //change to $HOME directory
@@ -18,6 +20,14 @@ void changeDir(tokenlist* tokens)
   }
 
   char *cwd = getcwd(NULL,0);
-  setenv("PWD",cwd,1);
-  free(cwd);
+  if(cwd == NULL)
+  {
+    printf("DIRECTORY DOES NOT EXIST!!!!\n");
+  }
+  else{
+    setenv("PWD",cwd,1);
+    free(cwd);
+  }
+
+  return time(NULL) - begin;
 }

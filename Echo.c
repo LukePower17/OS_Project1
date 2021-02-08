@@ -20,37 +20,36 @@ char *lowerCase(char *s)
     return result;
 }
 
-void echo(tokenlist *tokens)
+int echo(tokenlist *tokens)
 {
-
+    time_t begin = time(NULL);
     // Check if the command is echo
+    // printf("In echo ... \n");
     if (tokens->size > 0)
     {
-        char *cmd = lowerCase(tokens->items[0]);
+        // printf("In if ... \n");
 
-        if (strcmp(cmd, "echo") == 0)
+        if (strcmp(tokens->items[0], "echo") == 0)
         {
-            // fork and then print the values
-            int p_id = fork();
+            // printf("In strcmp ... \n");
 
-            if (p_id == 0)
+            for (int i = 1; i < tokens->size; i++)
             {
-                for (int i = 1; i < tokens->size; i++)
-                {
-                    if ((tokens->items[i])[0] == '$')
-                    {
+                    // printf("echo ... \n");
 
-                        printEnvironment(tokens->items[i]);
-                    }
-                    else
-                    {
-                        printf("%s", tokens->items[i]);
-                    }
+                if ((tokens->items[i])[0] == '$')
+                {
+                    printEnvironment(tokens->items[i]);
                 }
-                printf("\n");
+                else
+                {
+                    printf("%s", tokens->items[i]);
+                }
             }
+            printf("\n");
         }
 
-        free(cmd);
     }
+
+    return time(NULL) - begin;
 }

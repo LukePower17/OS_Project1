@@ -13,7 +13,8 @@
 #include "string.h"
 #include "CommandExe.h"
 
-void doPipe(tokenlist* command);
+
+int doPipe(tokenlist* command);
 int pipe_format(tokenlist *tokens);
 
 tokenlist *some_tokens(tokenlist *tokens, int start, int end);
