@@ -4,13 +4,14 @@
 #include "tokenlist.h"
 #include <unistd.h>
 #include <stdio.h>
+#include <time.h>
 
-int isValid(tokenlist *tokens);
+int isValidRedirection(tokenlist *tokens);
 char *isValidInputRedir(tokenlist *tokens);
 char *isValidOutputRedir(tokenlist *tokens);
 void getCommandIO(tokenlist* command, tokenlist *tokens);
 
-void redirection(tokenlist *tokens);
+int redirection(tokenlist *tokens);
 
 void inputRedirection(tokenlist *command, char *inputFile);
 void outputRedirection(tokenlist *command, char *outputFile);
