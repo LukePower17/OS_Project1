@@ -3,26 +3,30 @@
 
 #include <stdio.h>
 #include <unistd.h>
-#include <sys/types.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <sys/types.h>
 
 #include "tokenlist.h"
 
 typedef struct{
-    pid_t pid;
     int cmdNum;
+    int completed;
+    int startTime;
+    int endTime;
+    int timeTaken;
     tokenlist* command;
+    pid_t pid;
+
 } jobStruct;
 
-jobStruct* copyJob(jobStruct* job);
+
 jobStruct* newJob(void);
-char* getCommandJob(tokenlist* tokens);
-void printDone(jobStruct* job);
-jobStruct* makejob(int cmdNum, pid_t pid, tokenlist* command);
+jobStruct* makejob(int cmdNum, pid_t pid ,tokenlist* command);
 void printJob(jobStruct* job);
+void printDone(jobStruct* job);
 void freeJob(jobStruct* job);
 
-int isJobDone(jobStruct* job);
 
 #endif

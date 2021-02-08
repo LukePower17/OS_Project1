@@ -35,7 +35,17 @@ int removeElement(jobVector* V, pid_t pid);
 // 0 otherwise
 int appendElement(jobVector* V, jobStruct* job);
 
+void printJobVector(jobVector* V);
 
 // free jobVector
 void free_jobVector(jobVector* V);
+
+void removeCompletedJobs(jobVector* V);
+
+void printRunningJobs(jobVector* V);
+
+void printCompletedJobs(jobVector* V, time_t current_time);
+
+int runningCommandExists(jobVector* V);
+
 #endif

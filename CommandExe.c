@@ -4,7 +4,6 @@
 
 #include "CommandExe.h"
 
-
 int commandExecution(tokenlist* tokens)
 {
   time_t begin = time(NULL);
@@ -19,6 +18,9 @@ int commandExecution(tokenlist* tokens)
 
   // using tokenlist as a c string container
   tokenlist *args = new_tokenlist();
+
+
+  // switch echo jobs REDIRECTION Variables and ~
 
   // store resolvedPath with remaining token list
   add_token(args, resolvedPath);

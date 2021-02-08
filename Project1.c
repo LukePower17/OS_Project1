@@ -7,7 +7,6 @@
 #include "Echo.h"
 #include "EnvVariables.h"
 #include "IO.h"
-// #include "Jobs.h"
 #include "jobVector.h"
 #include "BackgroundProcess.h"
 #include "Path.h"
@@ -15,75 +14,48 @@
 #include "Prompt.h"
 #include "Tilde.h"
 #include "jobStruct.h"
+#include "tokenlist.h"
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
-#include "tokenlist.h"
-#include "Echo.h"
-
-
-#define EMPTY 0
-#define VARIABLE 1
-#define NORMALCOMMAND 2
-#define IMPLCOMMAND 3
-#define REDIRECTION 4
-#define PIPE 5
-#define BGPROCESS 6
-
-
-int commandType(tokenlist* tokens);
 
 int main()
 {
-
-
-	// unordered map<cmdNum, num> Jobs
-
-	// void Jobs(set* jobs)
-		// vector<int> cmdNums
-		//loop though
-			// if jobs->isAlive
-				// append the cmdNum
-
-		// sort cmdNums
-
-		// loop thorugh cmdNums
-		//  Jobs[cmdNum].printJOb()
-
-
-
 
 	char *input;
 
 	time_t begin = time(NULL);
 	time_t mostTime = 0;
+	time_t currentTime = 0;
+
 
 	int BGProcessNum = 0;
-	jobVector* jobsList = new_jobVector();
+	jobVector* jobList = new_jobVector();
+	int exits = 0;
 
 	do
-	{
-		time_t currentTime = 0;
+	{	
+		// printf("mostTIme %d\n", mostTime);
+		// printJobVector(jobList);
+		// from the map
 
-
-		// Check if any job is complete
+ 		printCompletedJobs(jobList, currentTime);
+		// Update most time
 		for(int i = 0; i < jobList->curSize; i++)
 		{
-			jobStruct* job = jobList->array[i];
-			pid_t pidJob = job->pid;
-
-			pid_t status = waitpid(pidJob, NULL, WNOHANG);
-			if(status != 0)
+			if( (mostTime) < (jobList->array[i]->timeTaken))
 			{
-				// process is finished
-				printDone(jobList->array[i]);
-				
+				(mostTime) = (jobList->array[i]->timeTaken);
 			}
 		}
-		// from the map
+
+
+		currentTime = 0;
+
 		printPrompt();
 
 		/* input contains the whole command
@@ -92,8 +64,8 @@ int main()
 		input = get_input();
 		//printf("whole input: *%s*\n", input);
 
-
-		if (input[0] != '\0')
+		
+		if (input[0] != '\0' && strcmp(input, "exit") != 0)
 		{
 			/*
 			Condition to check if input is empty
@@ -102,6 +74,8 @@ int main()
 
 			tokenlist *tokens = get_tokens(input);
 
+			// tokenlist2d = Parse
+			
 			for (int i = 0; i < tokens->size; i++)
 			{
 				//checks if the first character is a '$'
@@ -112,6 +86,7 @@ int main()
 			}
 
 			int isBGProcess= isBackgroundProcess(tokens);
+
 
 			if(isBGProcess == 1)
 			{
@@ -143,13 +118,49 @@ int main()
 
 			if(currentTime > mostTime)
 			{
-				mostTime = currentTime;
-			}
+				tokenlist* command = getCommandFromBGProcess(tokens);
 
-			if(strcmp(tokens->items[0],"cd") == 0)
+				// add the pid to map
+
+				pid_t pid = fork();
+				jobStruct* job = makejob(BGProcessNum, pid, command);
+				job->startTime = time(NULL);
+
+				if(pid == 0)
+				{
+					commandExecution(command);
+					exit(0);
+				}
+
+				printJob(job);
+				appendElement(jobList, job);
+
+				BGProcessNum++;
+				free_tokens(command);
+			}
+			
+
+
+			else if(strcmp(tokens->items[0],"cd") == 0)
 			{
 				changeDir(tokens);
 			}
+
+
+			else if(strcmp(tokens->items[0], "jobs") == 0)
+			{
+				printRunningJobs(jobList);
+			}
+			else
+			{
+				currentTime = commandExecution(tokens);
+			}
+
+			if(currentTime > (mostTime))
+			{
+				(mostTime) = currentTime;
+			}
+
 
 			doPipe(tokens);
 
@@ -157,26 +168,27 @@ int main()
 			// ...
 			// ...   background process ->
 			//commandExecution(command);
-
-			// redirection(tokens);
 			free_tokens(tokens);
 		}
-	}while(strcmp(input,"exit") != 0);
+		
 
-	free(input);
+		if(strcmp(input,"exit") == 0 && runningCommandExists(jobList) == 1)
+		{
+			printf("Waiting for background processes to finish ...\n");
 
+		}
+
+		exits = (strcmp(input, "exit") != 0 || runningCommandExists(jobList) == 1);
+
+		// printf("exits: %d strcmp: %d  runningcmd: %d%\n", exits,(strcmp(input, "exit") != 0), (runningCommandExists(jobList) == 1));
+	}while(exits != 0);
+
+	if(jobList != NULL)
+		free_jobVector(jobList);
+	if(input != NULL)
+		free(input);
+	
 	time_t end = time(NULL);
-	printf("Shell ran for %d seconds and took %d seconds to execute one command.\n", (int)(end - begin), (int)mostTime );
-
+	printf("Shell ran for %d seconds and took %d seconds to execute one command.\n", (int)(end - begin), (int)(mostTime) );
 	return 0;
 }
-
-
-// // A '|' C '|' E F
-// 	// int function detects commandType
-// 	// -> background process  1
-// 	// -> redirection         2
-// 	// -> built in command    3
-// 	// -> pipe                4
-// 	// -> implemented         5
-// 	// -> empty               0
