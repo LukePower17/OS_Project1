@@ -15,28 +15,28 @@ void doPipe(tokenlist *tokens){
   if (commands->size != numPipe + 1)
     return;
 
-  print_list2d(commands);
-  printf("numPipes: %d,\nCommands: %d\n", numPipe, commands->size);
+  // print_list2d(commands);
+  // printf("numPipes: %d,\nCommands: %d\n", numPipe, commands->size);
 
 
   // need to do commands == 3, which means 2 pipes
   if (commands->size == 2){
-    int p_fds[2];
+    int p1_to_p2[2];
     // slot 0 is output
     // slot 1 is input
-    pipe(p_fds);
+    pipe(p1_to_p2);
 
     // 0 in
     // 1 stdout
     // 2 stderr
-    // pfds[0]
-    // pfds[1]
+    // 3 p1_to_p2[0]
+    // 4 p1_to_p2[1]
 
     int pid1 = fork();
     if (pid1 == 0)
     {
       close(1);  // close stdout
-      dup(p_fds[1]); // redirect output to slot 1
+      dup(p1_to_p2[1]); // redirect output to slot 1
 
       // close extra spots
       close(3);
@@ -49,17 +49,107 @@ void doPipe(tokenlist *tokens){
     if (pid2 == 0)
     {
       close(0); // close input
-      dup(p_fds[0]);
+      dup(p1_to_p2[0]);
       close(3);
       close(4);
 
       commandExecution(commands->lists[1]);
       exit(1);
     }
-    close(p_fds[0]);
-    close(p_fds[1]);
+
+    close(p1_to_p2[0]);
+    close(p1_to_p2[1]);
     waitpid(pid1, NULL, 0);
     waitpid(pid2, NULL, 0);
+  }
+  else if (commands->size == 3)
+  {
+    int p1_to_p2[2];
+    int p2_to_p3[2];
+    // slot 0 is output
+    // slot 1 is input
+
+    pipe(p1_to_p2);
+    pipe(p2_to_p3);
+
+    // 0 in
+    // 1 stdout
+    // 2 stderr
+    // 3 p1_to_p2[0]
+    // 4 p1_to_p2[1]
+
+    // 5 p2_to_p3[0]
+    // 6 p2_to_p3[1]
+
+    int pid1 = fork();
+    if (pid1 == 0)
+    {
+      // redirect output of current process
+
+      // 1. close unused end of pipe
+      close(p1_to_p2[0]); // not retriving output from previous process
+
+      //2. channel process output(STDOUT == 1) to be input for next process
+      dup2(p1_to_p2[1], 1); // close output, replace w current pfd
+      close(p1_to_p2[1]); // close current pfd
+
+      commandExecution(commands->lists[0]);
+      exit(1);
+    }
+    int pid2 = fork();
+    if (pid2 == 0)
+    {
+      // redirect input
+
+      // 1. close the end we are not using
+      close(p1_to_p2[1]); // close off pipe and esure input is read
+
+      // 2. replace input (0) with pipe output from previous process and close
+      close(0)
+      dup2(p1_to_p2[0], 0); // close input, replace w current pfd
+      close(p1_to_p2[0]);   // close extra copy
+
+      // now to redirect command output
+
+      // 1. close end of unused side of pipe
+      close(p2_to_p3[0]); // close
+
+      // 2. channel process output index 1 to be the input of pipe for next guy
+
+      dup2(p2_to_p3[1], 1); // close output, replace with current pfd
+      close(p2_to_p3[1]);   // close extra copy
+
+      commandExecution(commands->lists[1]);
+      exit(1);
+    }
+    int pid3 = fork();
+    if (pid3 == 0)
+    {
+      // close unused pipe ends
+      close(p1_to_p2[0]);
+      close(p1_to_p2[1]);
+
+      // close unused end of previous pipe
+      close(p2_to_p3[1]);
+
+      // redirect pipe input to be process input
+      dup2(p2_to_p3[0], 0);
+      close(p2_to_p3[0]);
+
+      commandExecution(commands->lists[2]);
+      exit(1);
+    }
+
+    // close all pipes of parent process
+    close(p1_to_p2[0]);
+    close(p1_to_p2[1]);
+    close(p2_to_p3[0]);
+    close(p2_to_p3[1]);
+
+    // wait for child processes to finish before function return
+    waitpid(pid1, NULL, 0);
+    waitpid(pid2, NULL, 0);
+    waitpid(pid3, NULL, 0);
   }
   free_lists(commands);
 }
@@ -81,42 +171,3 @@ int num_pipes(tokenlist * tokens)
 // for(int i = 0; i < pipes; i++)
 //   p_fds[i] = (int*) malloc(sizeof(int) * 2);
 //
-// for(int i = 0; i < commands->size; i++)
-// {
-//   if (i + 1 != commands->size)  // if there is a next command
-//   {
-//     pipe(p_fds[(i+1)/2]);
-//   }
-//   int pid = fork();
-//   if (pid == 0)
-//   {
-//     if (i - 1 >= 0) // there is a previous command
-//     {
-//       dup2(p_fds[i/2][0], 0);
-//       close(p_fds[i/2][0]);
-//       close(p_fds[i/2][1]);
-//     }
-//     if (i + 1 != commands->size)  // there is a next command
-//     {
-//       close(p_fds[(i+1)/2][0]);
-//       dup2(p_fds[(i+1)/2][1], 1);
-//       close(p_fds[(i+1)/2][1]);
-//     }
-//     commandExecution(commands->lists[i]);
-//     exit(1);
-//   }
-//   else
-//   {
-//     if (i - 1 >= 0)
-//     {
-//       close(p_fds[(i+1)/2][0]);
-//       close(p_fds[(i+1)/2][1]);
-//     }
-//   }
-// }
-
-// for(int i = 0; i < pipes; i++)
-// {
-//   close(p_fds[i][0]);
-//   close(p_fds[i][1]);
-// }
