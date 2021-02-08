@@ -15,7 +15,7 @@
 #include "Tilde.h"
 #include "jobStruct.h"
 #include "tokenlist.h"
-
+#include "tokenlist2d.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,7 +43,6 @@ int main()
 		// printJobVector(jobList);
 		// from the map
 
- 		printCompletedJobs(jobList, currentTime);
 		// Update most time
 		for(int i = 0; i < jobList->curSize; i++)
 		{
@@ -87,10 +86,9 @@ int main()
 
 			int isBGProcess= isBackgroundProcess(tokens);
 
-
 			if(isBGProcess == 1)
 			{
-				printf("\nThis is a background process\n");
+				// printf("\nThis is a background process\n");
 				tokenlist* command = getCommandFromBGProcess(tokens);
 
 				// add the pid to map
@@ -111,42 +109,11 @@ int main()
 				BGProcessNum++;
 				free_tokens(command);
 			}
-			else
-			{
-				currentTime = commandExecution(tokens);
-			}
-
-			if(currentTime > mostTime)
-			{
-				tokenlist* command = getCommandFromBGProcess(tokens);
-
-				// add the pid to map
-
-				pid_t pid = fork();
-				jobStruct* job = makejob(BGProcessNum, pid, command);
-				job->startTime = time(NULL);
-
-				if(pid == 0)
-				{
-					commandExecution(command);
-					exit(0);
-				}
-
-				printJob(job);
-				appendElement(jobList, job);
-
-				BGProcessNum++;
-				free_tokens(command);
-			}
-			
-
 
 			else if(strcmp(tokens->items[0],"cd") == 0)
 			{
 				changeDir(tokens);
 			}
-
-
 			else if(strcmp(tokens->items[0], "jobs") == 0)
 			{
 				printRunningJobs(jobList);
@@ -156,18 +123,22 @@ int main()
 				currentTime = commandExecution(tokens);
 			}
 
+			doPipe(tokens);
+
 			if(currentTime > (mostTime))
 			{
 				(mostTime) = currentTime;
 			}
 
 
-			doPipe(tokens);
+			
 
 			// switch 1 ->
 			// ...
 			// ...   background process ->
 			//commandExecution(command);
+			printCompletedJobs(jobList, currentTime);
+
 			free_tokens(tokens);
 		}
 		
