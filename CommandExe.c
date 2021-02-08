@@ -32,7 +32,12 @@ int commandExecution(tokenlist* tokens)
   // child proccess executes command
   if (pid == 0)
   {
-    execv(args->items[0], args->items);
+    int err = execv(args->items[0], args->items);
+    if (err < 0)
+    {
+      fprintf(stderr, "Error executing %s\n", args->items[0] );
+    }
+    exit(1);
     // child thread does not do anything after execution command
   }
   else
