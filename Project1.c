@@ -85,7 +85,7 @@ int main()
 			}
 
 			int isBGProcess= isBackgroundProcess(tokens);
-
+			int numPipes = num_pipes(tokens);
 			if(isBGProcess == 1)
 			{
 				// printf("\nThis is a background process\n");
@@ -109,7 +109,15 @@ int main()
 				BGProcessNum++;
 				free_tokens(command);
 			}
+			else if(isValidRedirection(tokens) == 1)
+			{
+				currentTime = redirection(tokens);
+			}
+			else if(numPipes > 0)
+			{
 
+				currentTime = doPipe(tokens);
+			}
 			else if(strcmp(tokens->items[0],"cd") == 0)
 			{
 				changeDir(tokens);
@@ -122,8 +130,7 @@ int main()
 			{
 				currentTime = commandExecution(tokens);
 			}
-
-			doPipe(tokens);
+			
 
 			if(currentTime > (mostTime))
 			{
@@ -163,3 +170,5 @@ int main()
 	printf("Shell ran for %d seconds and took %d seconds to execute one command.\n", (int)(end - begin), (int)(mostTime) );
 	return 0;
 }
+
+

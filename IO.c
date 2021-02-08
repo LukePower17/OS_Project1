@@ -12,7 +12,7 @@
 #include <fcntl.h>
 
 // Checks if the set of tokens has IO (> or <) in it
-int isValid(tokenlist *tokens)
+int isValidRedirection(tokenlist *tokens)
 {
     for (int i = 0; i < tokens->size; i++)
     {
@@ -86,10 +86,10 @@ void getCommandIO(tokenlist* command, tokenlist *tokens)
 }
 
 // Does all the redirection
-void redirection(tokenlist *tokens)
+int redirection(tokenlist *tokens)
 {
-    int valid = isValid(tokens);
-
+    int valid = isValidRedirection(tokens);
+    time_t begin = time(NULL);
     if (valid == 1)
     {
 
@@ -119,6 +119,7 @@ void redirection(tokenlist *tokens)
         }
     
     }
+    return (time(NULL) - begin);
 }
 
 // Does input redirection
@@ -132,6 +133,7 @@ void inputRedirection(tokenlist *command, char *inputFile)
     fd = open(inputFile, O_RDONLY);
 
     // fork
+
     pid_t pid = fork();
 
 
@@ -285,5 +287,4 @@ void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
 }
 
         // Then >
-    }
-}
+    
