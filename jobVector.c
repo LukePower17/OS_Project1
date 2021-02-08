@@ -1,3 +1,7 @@
+//Project 1
+//COP4610
+//Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
+
 #include "jobVector.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -64,7 +68,7 @@ void resize(jobVector* V)
     {
         // Copyt the array
         jobStruct** tempArray = (jobStruct**) malloc(sizeof(jobStruct*) * V->size);
-        
+
         for(int i = 0; i < V->size;i++)
         {
             if(i < V->curSize)
@@ -134,7 +138,7 @@ jobStruct* searchElement(jobVector* V, pid_t pid)
     // printf("out of  search Element\n");
     // printf("index %d\n", index);
     return result;
-}   
+}
 
 // returns 1 if remoced sucessfully
 // 0 otherwise
@@ -148,7 +152,7 @@ int removeElement(jobVector* V, pid_t pid)
     if(index != -1 && V->curSize > 0)
     {
         jobStruct** tempArray = (jobStruct**) malloc(sizeof(jobStruct*) * V->size);
-        
+
         for(int i = 0; i < V->size;i++)
         {
             if(i == index)
@@ -158,7 +162,7 @@ int removeElement(jobVector* V, pid_t pid)
             }
             else
                 tempArray[i] = copyJob(V->array[i]);
-            
+
         }
         tempArray[V->size - 1] = newJob();
 
@@ -177,7 +181,7 @@ int removeElement(jobVector* V, pid_t pid)
 
         if(V->curSize > 0)
             V->curSize -= 1;
-        
+
         // printf("out of remove element\n");
         // printJobVector(V);
         return 1;
@@ -307,7 +311,7 @@ void printRunningJobs(jobVector* V)
         pid_t status = waitpid((V->array[i])->pid, NULL, WNOHANG);
         if(status == 0)
         {
-            printDone(V->array[i]);   
+            printDone(V->array[i]);
         }
     }
 }

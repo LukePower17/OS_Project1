@@ -1,3 +1,7 @@
+//Project 1
+//COP4610
+//Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
+
 #include "jobStruct.h"
 #include <strings.h>
 #include <unistd.h>
@@ -49,7 +53,7 @@ jobStruct* makejob(int cmdNum, pid_t pid, tokenlist* tokens)
 
     job->startTime = 0;
     job->endTime = 0;
-    
+
     job->command = new_tokenlist();
     job->timeTaken = 0;
     for (int i = 0; i < tokens->size; i++)
@@ -68,7 +72,7 @@ char* getCommandJob(tokenlist* tokens)
 
     for(int i = 0; i < tokens->size; i++)
     {
-        size += strlen(tokens->items[i]) + 1; 
+        size += strlen(tokens->items[i]) + 1;
     }
 
     char* name = (char* ) malloc(size);

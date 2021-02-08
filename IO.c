@@ -1,4 +1,6 @@
-// Comment test
+//Project 1
+//COP4610
+//Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
 
 #include "IO.h"
 #include "tokenlist.h"
@@ -117,7 +119,7 @@ int redirection(tokenlist *tokens)
         {
             inputRedirection(command, inputFile);
         }
-    
+
     }
     return (time(NULL) - begin);
 }
@@ -169,7 +171,7 @@ void inputRedirection(tokenlist *command, char *inputFile)
     else
     {
         // Wait till the child process is finished
-        waitpid(pid,NULL,0); 
+        waitpid(pid,NULL,0);
         // close the file descriptor
         close(fd);
 
@@ -213,7 +215,7 @@ void outputRedirection(tokenlist *command, char *outputFile)
 
         // execute the command
         commandExecution(command);
-        
+
         // exit
         exit(0);
 
@@ -221,7 +223,7 @@ void outputRedirection(tokenlist *command, char *outputFile)
     else
     {
         // wait till childs process is done
-        waitpid(pid,NULL,0); 
+        waitpid(pid,NULL,0);
         close(fd);
     }
 }
@@ -280,11 +282,10 @@ void IORedirection(tokenlist *command, char *inputFile, char *outputFile)
     else
     {
         // wait till child process is done
-        waitpid(pid,NULL,0); 
+        waitpid(pid,NULL,0);
         close(fd1);
         close(fd2);
     }
 }
 
         // Then >
-    

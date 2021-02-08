@@ -36,7 +36,7 @@ tokenlist2d.o: tokenlist2d.c tokenlist2d.h
 
 Tilde.o: Tilde.c Tilde.h
 	$(COM) -c Tilde.c
-	
+
 EnvVariables.o: EnvVariables.c EnvVariables.h
 	$(COM) -c EnvVariables.c
 

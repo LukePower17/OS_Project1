@@ -41,7 +41,7 @@ int main()
 	int exits = 0;
 
 	do
-	{	
+	{
 		// printf("mostTIme %d\n", mostTime);
 		// printJobVector(jobList);
 		// from the map
@@ -69,7 +69,7 @@ int main()
 		input = get_input();
 		//printf("whole input: *%s*\n", input);
 
-		
+
 		if (input[0] != '\0' && strcmp(input, "exit") != 0)
 		{
 			/*
@@ -80,71 +80,67 @@ int main()
 			tokenlist *tokens = get_tokens(input);
 
 			// tokenlist2d = Parse
-			
-			for (int i = 0; i < tokens->size; i++)
+
+			if(tokens->items[0][0] == '~' && tokens->size == 1)
 			{
-				//checks if the first character is a '$'
-				if (tokens->items[i][0] == '$')
-				{
-					printEnvironment(tokens->items[i]);
-				}
-				if(tokens->items[i][0] == '~')
-				{
-					printf("%s\n", getTilde());
-				}
-			}
-
-			tokenlist* expandedTilde = expandTilde(tokens);
-			free_tokens(tokens);
-			tokens = expandedTilde;
-			
-			// print_tokens(tokens);
-
-			int isBGProcess= isBackgroundProcess(tokens);
-			if(isBGProcess == 1)
-			{
-				// printf("\nThis is a background process\n");
-				tokenlist* command = getCommandFromBGProcess(tokens);
-				// add the pid to map
-
-				pid_t pid = fork();
-				jobStruct* job = makejob(BGProcessNum, pid, command);
-
-				if(pid == 0)
-				{					
-					currentTime = execute(command);	
-					exit(0);
-				}
-				printJob(job);
-
-				appendElement(jobList, job);
-				BGProcessNum++;
-				free_tokens(command);
-			}
-			else if(strcmp(tokens->items[0], "jobs") == 0)
-			{
-				printRunningJobs(jobList);
+				printf("%s\n", getTilde());
 			}
 			else
 			{
-				currentTime = execute(tokens);
+				tokenlist* expandedTilde = expandTilde(tokens);
+				free_tokens(tokens);
+				tokens = expandedTilde;
+
+				// print_tokens(tokens);
+
+				int isBGProcess= isBackgroundProcess(tokens);
+				if(isBGProcess == 1)
+				{
+					// printf("\nThis is a background process\n");
+					tokenlist* command = getCommandFromBGProcess(tokens);
+					// add the pid to map
+
+					pid_t pid = fork();
+					jobStruct* job = makejob(BGProcessNum, pid, command);
+
+					if(pid == 0)
+					{
+						currentTime = execute(command);
+						exit(0);
+					}
+					printJob(job);
+
+					appendElement(jobList, job);
+					BGProcessNum++;
+					free_tokens(command);
+				}
+				else if(strcmp(tokens->items[0], "jobs") == 0)
+				{
+					printRunningJobs(jobList);
+				}
+				else
+				{
+					currentTime = execute(tokens);
+				}
+
+				if(currentTime > (mostTime))
+				{
+					(mostTime) = currentTime;
+				}
+
+
+				free_tokens(tokens);
 			}
 
-			if(currentTime > (mostTime))
+
+			if(strcmp(input,"exit") == 0 && runningCommandExists(jobList) == 1)
 			{
-				(mostTime) = currentTime;
+				printf("Waiting for background processes to finish ...\n");
+
 			}
-
-
-			free_tokens(tokens);
 		}
-		
 
-		if(strcmp(input,"exit") == 0 && runningCommandExists(jobList) == 1)
-		{
-			printf("Waiting for background processes to finish ...\n");
 
-		}
 
 		exits = (strcmp(input, "exit") != 0 || runningCommandExists(jobList) == 1);
 
@@ -154,7 +150,7 @@ int main()
 		free_jobVector(jobList);
 	if(input != NULL)
 		free(input);
-	
+
 	time_t end = time(NULL);
 	printf("Shell ran for %d seconds and took %d seconds to execute one command.\n", (int)(end - begin), (int)(mostTime) );
 	return 0;

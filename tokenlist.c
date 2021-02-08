@@ -1,3 +1,7 @@
+//Project 1
+//COP4610
+//Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
+
 #include "tokenlist.h"
 
 tokenlist *new_tokenlist(void)
@@ -25,7 +29,7 @@ void add_token(tokenlist *tokens, char *item)
 
 // tokenlist2d
 // | > < &
-// 1. & 2. | 3. <> 
+// 1. & 2. | 3. <>
 
 char *get_input(void)
 {

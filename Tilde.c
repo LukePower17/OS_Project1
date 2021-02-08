@@ -1,3 +1,7 @@
+//Project 1
+//COP4610
+//Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
+
 #include <stdio.h>
 #include <unistd.h>
 #include <ctype.h>
@@ -22,13 +26,13 @@ int hasTilde(tokenlist* tokens)
 char* expandTildeToken(char* token)
 {
     char* tilde = (char*) malloc( strlen(getTilde()) + 1 + strlen(token));
-    
-    strcpy(tilde, ""); 
+
+    strcpy(tilde, "");
     if(strlen(token) >= 1){
 
         if(token[0] == '~')
         {
-            strcat(tilde, getTilde());   
+            strcat(tilde, getTilde());
         }
         strcat(tilde, token+1);
     }
@@ -63,6 +67,3 @@ char *getTilde()
     result = getEnvironment("$HOME");
     return result;
 }
-
-
-

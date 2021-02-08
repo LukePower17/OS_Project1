@@ -1,3 +1,7 @@
+//Project 1
+//COP4610
+//Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
+
 #ifndef JOB_VECTOR_H
 #define JOB_VECTOR_H
 
