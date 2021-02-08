@@ -47,6 +47,8 @@ int main()
 		// from the map
 
 		// Update most time
+		printCompletedJobs(jobList, currentTime);
+
 		for(int i = 0; i < jobList->curSize; i++)
 		{
 			if( (mostTime) < (jobList->array[i]->timeTaken))
@@ -57,6 +59,7 @@ int main()
 
 
 		currentTime = 0;
+
 
 		printPrompt();
 
@@ -95,8 +98,7 @@ int main()
 			free_tokens(tokens);
 			tokens = expandedTilde;
 			
-
-
+			// print_tokens(tokens);
 
 			int isBGProcess= isBackgroundProcess(tokens);
 			if(isBGProcess == 1)
@@ -134,14 +136,6 @@ int main()
 			}
 
 
-			
-
-			// switch 1 ->
-			// ...
-			// ...   background process ->
-			//commandExecution(command);
-			printCompletedJobs(jobList, currentTime);
-
 			free_tokens(tokens);
 		}
 		
@@ -154,7 +148,6 @@ int main()
 
 		exits = (strcmp(input, "exit") != 0 || runningCommandExists(jobList) == 1);
 
-		// printf("exits: %d strcmp: %d  runningcmd: %d%\n", exits,(strcmp(input, "exit") != 0), (runningCommandExists(jobList) == 1));
 	}while(exits != 0);
 
 	if(jobList != NULL)
@@ -187,6 +180,7 @@ int execute(tokenlist* tokens)
 	}
 	else if(strcmp(tokens->items[0], "echo") == 0)
 	{
+		// printf("Exectue Echo\n");
 		currentTime = echo(tokens);
 	}
 	else

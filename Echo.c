@@ -24,18 +24,21 @@ int echo(tokenlist *tokens)
 {
     time_t begin = time(NULL);
     // Check if the command is echo
+    // printf("In echo ... \n");
     if (tokens->size > 0)
     {
-        char *cmd = lowerCase(tokens->items[0]);
+        // printf("In if ... \n");
 
-        if (strcmp(cmd, "echo") == 0)
+        if (strcmp(tokens->items[0], "echo") == 0)
         {
+            // printf("In strcmp ... \n");
 
             for (int i = 1; i < tokens->size; i++)
             {
+                    // printf("echo ... \n");
+
                 if ((tokens->items[i])[0] == '$')
                 {
-
                     printEnvironment(tokens->items[i]);
                 }
                 else
@@ -46,7 +49,6 @@ int echo(tokenlist *tokens)
             printf("\n");
         }
 
-        free(cmd);
     }
 
     return time(NULL) - begin;
