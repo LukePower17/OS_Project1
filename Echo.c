@@ -20,9 +20,9 @@ char *lowerCase(char *s)
     return result;
 }
 
-void echo(tokenlist *tokens)
+int echo(tokenlist *tokens)
 {
-
+    time_t begin = time(NULL);
     // Check if the command is echo
     if (tokens->size > 0)
     {
@@ -30,27 +30,24 @@ void echo(tokenlist *tokens)
 
         if (strcmp(cmd, "echo") == 0)
         {
-            // fork and then print the values
-            int p_id = fork();
 
-            if (p_id == 0)
+            for (int i = 1; i < tokens->size; i++)
             {
-                for (int i = 1; i < tokens->size; i++)
+                if ((tokens->items[i])[0] == '$')
                 {
-                    if ((tokens->items[i])[0] == '$')
-                    {
 
-                        printEnvironment(tokens->items[i]);
-                    }
-                    else
-                    {
-                        printf("%s", tokens->items[i]);
-                    }
+                    printEnvironment(tokens->items[i]);
                 }
-                printf("\n");
+                else
+                {
+                    printf("%s", tokens->items[i]);
+                }
             }
+            printf("\n");
         }
 
         free(cmd);
     }
+
+    return time(NULL) - begin;
 }

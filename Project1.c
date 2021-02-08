@@ -23,6 +23,9 @@
 #include <ctype.h>
 #include <time.h>
 
+
+int execute(tokenlist* tokens);
+
 int main()
 {
 
@@ -82,63 +85,48 @@ int main()
 				{
 					printEnvironment(tokens->items[i]);
 				}
-				else if(strcmp(tokens->items[i], "~") == 0 && strcmp(tokens->items[i], "~+") == 0 && strcmp(tokens->items[i], "~-") == 0)
+				if(tokens->items[i][0] == '~')
 				{
-					
+					printf("%s\n", getTilde());
 				}
 			}
 
+			tokenlist* expandedTilde = expandTilde(tokens);
+			free_tokens(tokens);
+			tokens = expandedTilde;
+			
+
+
+
 			int isBGProcess= isBackgroundProcess(tokens);
-			int numPipes = num_pipes(tokens);
 			if(isBGProcess == 1)
 			{
 				// printf("\nThis is a background process\n");
 				tokenlist* command = getCommandFromBGProcess(tokens);
-
 				// add the pid to map
 
 				pid_t pid = fork();
 				jobStruct* job = makejob(BGProcessNum, pid, command);
 
 				if(pid == 0)
-				{
-					currentTime = commandExecution(command);
+				{					
+					currentTime = execute(command);	
 					exit(0);
 				}
 				printJob(job);
 
 				appendElement(jobList, job);
-
-				// freeJob(job);
 				BGProcessNum++;
 				free_tokens(command);
-			}
-			else if(isValidRedirection(tokens) == 1)
-			{
-				currentTime = redirection(tokens);
-			}
-			else if(numPipes > 0)
-			{
-
-				currentTime = doPipe(tokens);
-			}
-			else if(strcmp(tokens->items[0],"cd") == 0)
-			{
-				changeDir(tokens);
 			}
 			else if(strcmp(tokens->items[0], "jobs") == 0)
 			{
 				printRunningJobs(jobList);
 			}
-			else if(strcmp(tokens->items[0], "echo") == 0)
-			{
-
-			}
 			else
 			{
-				currentTime = commandExecution(tokens);
+				currentTime = execute(tokens);
 			}
-			
 
 			if(currentTime > (mostTime))
 			{
@@ -180,3 +168,31 @@ int main()
 }
 
 
+int execute(tokenlist* tokens)
+{
+
+	int numPipes = num_pipes(tokens);
+	time_t currentTime = 0;
+	if(isValidRedirection(tokens) == 1)
+	{
+		currentTime = redirection(tokens);
+	}
+	else if(numPipes > 0)
+	{
+		currentTime = doPipe(tokens);
+	}
+	else if(strcmp(tokens->items[0],"cd") == 0)
+	{
+		currentTime = changeDir(tokens);
+	}
+	else if(strcmp(tokens->items[0], "echo") == 0)
+	{
+		currentTime = echo(tokens);
+	}
+	else
+	{
+		currentTime = commandExecution(tokens);
+	}
+	return currentTime;
+
+}
