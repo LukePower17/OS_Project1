@@ -14,6 +14,7 @@
 #include "Prompt.h"
 #include "Tilde.h"
 #include "jobStruct.h"
+#include "tokenlist.h"
 
 
 #include <stdio.h>
@@ -21,12 +22,6 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
-#include "tokenlist.h"
-#include "Echo.h"
-
-
-
-// int commandType(tokenlist* tokens);
 
 int main()
 {
@@ -36,6 +31,7 @@ int main()
 	time_t begin = time(NULL);
 	time_t mostTime = 0;
 	time_t currentTime = 0;
+
 
 	int BGProcessNum = 0;
 	jobVector* jobList = new_jobVector();
@@ -57,11 +53,10 @@ int main()
 			}
 		}
 
+
 		currentTime = 0;
 
 		printPrompt();
-
-
 
 		/* input contains the whole command
 		 * tokens contains substrings from input split by spaces
@@ -92,7 +87,36 @@ int main()
 
 			int isBGProcess= isBackgroundProcess(tokens);
 
+
 			if(isBGProcess == 1)
+			{
+				printf("\nThis is a background process\n");
+				tokenlist* command = getCommandFromBGProcess(tokens);
+
+				// add the pid to map
+
+				pid_t pid = fork();
+				jobStruct* job = makejob(BGProcessNum, pid, command);
+
+				if(pid == 0)
+				{
+					currentTime = commandExecution(command);
+					exit(0);
+				}
+				printJob(job);
+
+				appendElement(jobList, job);
+
+				// freeJob(job);
+				BGProcessNum++;
+				free_tokens(command);
+			}
+			else
+			{
+				currentTime = commandExecution(tokens);
+			}
+
+			if(currentTime > mostTime)
 			{
 				tokenlist* command = getCommandFromBGProcess(tokens);
 
@@ -122,6 +146,7 @@ int main()
 				changeDir(tokens);
 			}
 
+
 			else if(strcmp(tokens->items[0], "jobs") == 0)
 			{
 				printRunningJobs(jobList);
@@ -137,6 +162,12 @@ int main()
 			}
 
 
+			doPipe(tokens);
+
+			// switch 1 ->
+			// ...
+			// ...   background process ->
+			//commandExecution(command);
 			free_tokens(tokens);
 		}
 		
@@ -161,22 +192,3 @@ int main()
 	printf("Shell ran for %d seconds and took %d seconds to execute one command.\n", (int)(end - begin), (int)(mostTime) );
 	return 0;
 }
-
-
-// // A '|' C '|' E F
-// 	// int function detects commandType
-// 	// -> background process  1
-// 	// -> redirection         2
-// 	// -> built in command    3
-// 	// -> pipe                4
-// 	// -> implemented         5
-// 	// -> empty               0
-
-
-// #define EMPTY 0
-// #define VARIABLE 1
-// #define NORMALCOMMAND 2
-// #define IMPLCOMMAND 3
-// #define REDIRECTION 4
-// #define PIPE 5
-// #define BGPROCESS 6

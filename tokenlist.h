@@ -17,4 +17,9 @@ tokenlist *new_tokenlist(void);
 void add_token(tokenlist *tokens, char *item);
 void free_tokens(tokenlist *tokens);
 
+// ADDED FUNCTIONS
+
+tokenlist *copy_tokenlist(tokenlist *tokens);
+void print_tokens(tokenlist * tokens);
+
 #endif

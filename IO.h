@@ -8,7 +8,7 @@
 int isValid(tokenlist *tokens);
 char *isValidInputRedir(tokenlist *tokens);
 char *isValidOutputRedir(tokenlist *tokens);
-void getCommand(tokenlist* command, tokenlist *tokens);
+void getCommandIO(tokenlist* command, tokenlist *tokens);
 
 void redirection(tokenlist *tokens);
 

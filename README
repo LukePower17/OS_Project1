@@ -1,1 +1,41 @@
-Test add file to git
+Project 1
+COP4610
+
+This Project was implemented by:
+Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
+
+Delegation of Tasks:
+
+Part 2: Environmental Variables [3]:
+This part was completed by Luke Power
+
+Part 3: Prompt [2]
+This part was completed by Daniel Jamsheedy
+
+Part 4: Tilde Expansion [5]
+This part was completed by Pavan Vadrevu
+
+Part 5: $PATH Search [5]
+This part was completed by Luke Power
+
+Part 6: External Command Execution [10]
+This part was completed by Daniel Jamsheedy
+
+Part 7: I/O Redirection [10]
+This part was completed by Pavan Vadrevu
+
+Part 8: Piping [10]
+This part was completed by Daniel Jamsheedy
+
+Part 9: Background Processing [10]
+This part was completed by Pavan Vadrevu
+
+Part 10: Built-In Functions [15]
+-Exit: This part was completed by Luke Power
+-cd: This part was completed by Luke Power
+-echo: This part was completed by Pavan Vadrevu
+-Jobs: This part was completed by Pavan Vadrevu and Luke Power
+
+Extra Credit:
+-Shell-ception
+-Support piping and I/O redirection in a single command

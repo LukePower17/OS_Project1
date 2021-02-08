@@ -7,8 +7,8 @@
 int commandExecution(tokenlist* tokens)
 {
   time_t begin = time(NULL);
-  char * resolvedPath = pathSearch(tokens->items[0]);
 
+  char * resolvedPath = pathSearch(tokens->items[0]);
 
   if (resolvedPath == NULL)
   {
@@ -34,14 +34,22 @@ int commandExecution(tokenlist* tokens)
   // child proccess executes command
   if (pid == 0)
   {
-    execv(args->items[0], args->items);
-    free_tokens(args);
-    free(resolvedPath);
+    int err = execv(args->items[0], args->items);
+    if (err < 0)
+    {
+      fprintf(stderr, "Error executing %s\n", args->items[0] );
+    }
+    exit(1);
+    // child thread does not do anything after execution command
   }
   else
   {
     waitpid(pid, NULL, 0);
+    // wait for child process to finish then continue
   }
+  free_tokens(args);
+  free(resolvedPath);
+
   time_t end = time(NULL);
 
   return (end - begin);
