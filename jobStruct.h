@@ -5,13 +5,16 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include "tokenlist.h"
+
 typedef struct{
     int cmdNum;
-    char* name;
-    int isRunning; // 0 is dead 1 if running
+    int completed;
+    int startTime;
+    int endTime;
     int timeTaken;
-    pid_t pid;
-
+    tokenlist* command;
 } jobStruct;
 
 
