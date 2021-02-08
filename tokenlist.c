@@ -25,7 +25,7 @@ void add_token(tokenlist *tokens, char *item)
 
 // tokenlist2d
 // | > < &
-// 1. & 2. | 3. <> 
+// 1. & 2. | 3. <>
 
 char *get_input(void)
 {

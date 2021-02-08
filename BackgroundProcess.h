@@ -6,4 +6,3 @@ int isBackgroundProcess(tokenlist* tokens);
 tokenlist* getCommandFromBGProcess(tokenlist* tokens);
 
 #endif
-

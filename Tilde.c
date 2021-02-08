@@ -61,4 +61,3 @@ char *getTilde(tokenlist* tokens)
 
     return result;
 }
-

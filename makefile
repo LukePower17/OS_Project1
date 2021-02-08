@@ -6,7 +6,7 @@ COM=$(CC) $(CFLAGS)
 # general use command for compilation
 # maps to the compiler code and flags listed above
 
-DEP=Project1.o tokenlist.o EnvVariables.o Echo.o Prompt.o Path.o \
+DEP=Project1.o tokenlist.o tokenlist2d.o EnvVariables.o Echo.o Prompt.o Path.o \
 		CommandExe.o CD.o Piping.o BackgroundProcess.o jobStruct.o jobVector.o
 
 # to reference our dependency list throughout the shell command
