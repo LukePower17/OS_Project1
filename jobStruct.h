@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <sys/types.h>
+
 #include "tokenlist.h"
 
 typedef struct{
@@ -23,6 +25,7 @@ typedef struct{
 jobStruct* newJob(void);
 jobStruct* makejob(int cmdNum, pid_t pid ,tokenlist* command);
 void printJob(jobStruct* job);
+void printDone(jobStruct* job);
 void freeJob(jobStruct* job);
 
 

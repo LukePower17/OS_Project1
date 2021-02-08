@@ -1,5 +1,7 @@
 #include "jobStruct.h"
+#include <strings.h>
 #include <unistd.h>
+#include <stdio.h>
 
 jobStruct* copyJob(jobStruct* job)
 {
@@ -32,7 +34,7 @@ jobStruct* newJob(void)
     return job;
 }
 
-jobStruct* makejob(int cmdNum, tokenlist* command, pid_t pid);
+jobStruct* makejob(int cmdNum, pid_t pid, tokenlist* tokens)
 {
     jobStruct* job = newJob();
 
@@ -64,19 +66,30 @@ char* getCommandJob(tokenlist* tokens)
 {
     int size = 0;
 
-    job->timeTaken = 0;
+    for(int i = 0; i < tokens->size; i++)
+    {
+        size += strlen(tokens->items[i]) + 1; 
+    }
 
-    job->isRunning = isRunning;
-    job->pid = pid;
+    char* name = (char* ) malloc(size);
+    strcpy(name, "");
+    for(int i = 0; i < tokens->size; i++)
+    {
+        strcat(name, tokens->items[i]);
+        if( i != tokens->size - 1)
+            strcat(name , " ");
+    }
 
-
-    return job;
+    return name;
 }
 void printDone(jobStruct* job)
 {
     char* name = getCommandJob(job->command);
     printf("[%d]+ [%ld] [%s]\n", job->cmdNum, (long)job->pid, name);
 
+    free(name);
+    name = NULL;
+}
 void printJob(jobStruct* job)
 {
 
@@ -85,7 +98,11 @@ void printJob(jobStruct* job)
         printf("NULL JOB\n");
     }
     else{
-        printf("[%d]+ [%ld] [%s]\n", job->cmdNum, (long)job->pid, job->name);
+        char* name = getCommandJob(job->command);
+
+        printf("[%d]+ [%ld] [%s]\n", job->cmdNum, (long)job->pid, name);
+            free(name);
+    name = NULL;
     }
 }
 
@@ -98,7 +115,6 @@ void freeJob(jobStruct* job)
     }
     if(job != NULL){
 
-        free(job->name);
         free(job);
         job = NULL;
     }

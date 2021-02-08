@@ -26,7 +26,7 @@
 
 
 
-int commandType(tokenlist* tokens);
+// int commandType(tokenlist* tokens);
 
 int main()
 {
@@ -126,13 +126,10 @@ int main()
 					job->timeTaken = timeTaken;
 					job->endTime = time(NULL);
 
-					printf("Time taken = %d", timeTaken);
-					// printf("%d\n", (job->endTime - job->startTime));
 					if( (mostTime) < timeTaken)
 					{
 						mostTime = timeTaken;
 					}
-					printf("most time child %d", mostTime);
 					exit(0);
 				}
 
@@ -143,6 +140,18 @@ int main()
 				BGProcessNum++;
 				free_tokens(command);
 			}
+			
+
+
+			else if(strcmp(tokens->items[0],"cd") == 0)
+			{
+				changeDir(tokens);
+			}
+
+			else if(strcmp(tokens->items[0], "jobs") == 0)
+			{
+				printRunningJobs(jobList);
+			}
 			else
 			{
 				currentTime = commandExecution(tokens);
@@ -151,16 +160,6 @@ int main()
 			if(currentTime > (mostTime))
 			{
 				(mostTime) = currentTime;
-			}
-
-			if(strcmp(tokens->items[0],"cd") == 0)
-			{
-				changeDir(tokens);
-			}
-
-			if(strcmp(tokens->items[0], "jobs") == 0)
-			{
-				printRunningJobs(jobList);
 			}
 
 			//doPipe(tokens);
