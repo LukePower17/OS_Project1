@@ -1,7 +1,6 @@
 #include "jobStruct.h"
+#include <unistd.h>
 
-<<<<<<< Updated upstream
-=======
 jobStruct* copyJob(jobStruct* job)
 {
     jobStruct* result = newJob();
@@ -19,29 +18,21 @@ jobStruct* copyJob(jobStruct* job)
     return result;
 }
 
->>>>>>> Stashed changes
 jobStruct* newJob(void)
 {
     jobStruct* job = (jobStruct *)malloc(sizeof(jobStruct));
 
     job->cmdNum = -1;
-    job->name = "";
-    job->isRunning = -1;
     job->pid = -1;
-<<<<<<< Updated upstream
-    job->timeTaken = -1;
-
-=======
     job->command = NULL;
     job->completed = 0;
     job->timeTaken = 0;
     job->startTime = 0;
     job->endTime = 0;
->>>>>>> Stashed changes
     return job;
 }
 
-jobStruct* makejob(int cmdNum, char* name, int isRunning, pid_t pid)
+jobStruct* makejob(int cmdNum, tokenlist* command, pid_t pid);
 {
     jobStruct* job = newJob();
 
@@ -51,11 +42,6 @@ jobStruct* makejob(int cmdNum, char* name, int isRunning, pid_t pid)
     }
 
     job->cmdNum = cmdNum;
-<<<<<<< Updated upstream
-    
-    job->name = (char*)malloc(sizeof(strlen(name)+1));
-    strcpy(job->name, name);
-=======
     job->pid = pid;
     job->completed = 0;
 
@@ -77,7 +63,6 @@ jobStruct* makejob(int cmdNum, char* name, int isRunning, pid_t pid)
 char* getCommandJob(tokenlist* tokens)
 {
     int size = 0;
->>>>>>> Stashed changes
 
     job->timeTaken = 0;
 
@@ -87,13 +72,10 @@ char* getCommandJob(tokenlist* tokens)
 
     return job;
 }
-<<<<<<< Updated upstream
-=======
 void printDone(jobStruct* job)
 {
     char* name = getCommandJob(job->command);
     printf("[%d]+ [%ld] [%s]\n", job->cmdNum, (long)job->pid, name);
->>>>>>> Stashed changes
 
 void printJob(jobStruct* job)
 {

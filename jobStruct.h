@@ -15,11 +15,13 @@ typedef struct{
     int endTime;
     int timeTaken;
     tokenlist* command;
+    pid_t pid;
+
 } jobStruct;
 
 
 jobStruct* newJob(void);
-jobStruct* makejob(int cmdNum, char* name, int isRunning, pid_t pid);
+jobStruct* makejob(int cmdNum, pid_t pid ,tokenlist* command);
 void printJob(jobStruct* job);
 void freeJob(jobStruct* job);
 
