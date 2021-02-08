@@ -31,33 +31,15 @@
 int main()
 {
 
-
-	// unordered map<cmdNum, num> Jobs
-
-	// void Jobs(set* jobs)
-		// vector<int> cmdNums
-		//loop though
-			// if jobs->isAlive
-				// append the cmdNum
-
-		// sort cmdNums
-
-		// loop thorugh cmdNums
-		//  Jobs[cmdNum].printJOb()
-
-
-
-
 	char *input;
 
 	time_t begin = time(NULL);
-
 	time_t mostTime = 0;
-	
+	time_t currentTime = 0;
+
 	int BGProcessNum = 0;
 	jobVector* jobList = new_jobVector();
 	int exits = 0;
-	time_t currentTime = 0;
 
 	do
 	{	
@@ -69,16 +51,16 @@ int main()
 		// Update most time
 		for(int i = 0; i < jobList->curSize; i++)
 		{
-
-			// printf("time taken: %d\n", (jobList->array[i]->endTime - jobList->array[i]->startTime));
 			if( (mostTime) < (jobList->array[i]->timeTaken))
 			{
 				(mostTime) = (jobList->array[i]->timeTaken);
 			}
 		}
-		printPrompt();
 
 		currentTime = 0;
+
+		printPrompt();
+
 
 
 		/* input contains the whole command
@@ -122,21 +104,13 @@ int main()
 
 				if(pid == 0)
 				{
-					int timeTaken = commandExecution(command);
-					job->timeTaken = timeTaken;
-					job->endTime = time(NULL);
-
-					if( (mostTime) < timeTaken)
-					{
-						mostTime = timeTaken;
-					}
+					commandExecution(command);
 					exit(0);
 				}
 
 				printJob(job);
 				appendElement(jobList, job);
 
-				// freeJob(job);
 				BGProcessNum++;
 				free_tokens(command);
 			}
@@ -162,25 +136,16 @@ int main()
 				(mostTime) = currentTime;
 			}
 
-			//doPipe(tokens);
 
-			// switch 1 ->
-			// ...
-			// ...   background process ->
-			//commandExecution(command);
-
-			// redirection(tokens);
 			free_tokens(tokens);
 		}
 		
-		// printf("Check 1\n");
 
 		if(strcmp(input,"exit") == 0 && runningCommandExists(jobList) == 1)
 		{
 			printf("Waiting for background processes to finish ...\n");
 
 		}
-		// printf("Check 2\n");
 
 		exits = (strcmp(input, "exit") != 0 || runningCommandExists(jobList) == 1);
 
