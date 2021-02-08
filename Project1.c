@@ -82,6 +82,10 @@ int main()
 				{
 					printEnvironment(tokens->items[i]);
 				}
+				else if(strcmp(tokens->items[i], "~") == 0 && strcmp(tokens->items[i], "~+") == 0 && strcmp(tokens->items[i], "~-") == 0)
+				{
+					
+				}
 			}
 
 			int isBGProcess= isBackgroundProcess(tokens);
@@ -125,6 +129,10 @@ int main()
 			else if(strcmp(tokens->items[0], "jobs") == 0)
 			{
 				printRunningJobs(jobList);
+			}
+			else if(strcmp(tokens->items[0], "echo") == 0)
+			{
+
 			}
 			else
 			{
