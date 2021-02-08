@@ -105,7 +105,6 @@ void doPipe(tokenlist *tokens){
       close(p1_to_p2[1]); // close off pipe and esure input is read
 
       // 2. replace input (0) with pipe output from previous process and close
-      close(0)
       dup2(p1_to_p2[0], 0); // close input, replace w current pfd
       close(p1_to_p2[0]);   // close extra copy
 
