@@ -1,8 +1,9 @@
 Project 1
 COP4610
-
 This Project was implemented by:
 Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
+
+-----------------------------------------------------------------------------
 
 Delegation of Tasks:
 
@@ -36,9 +37,95 @@ Part 10: Built-In Functions [15]
 -echo: This part was completed by Pavan Vadrevu
 -Jobs: This part was completed by Pavan Vadrevu and Luke Power
 
+-----------------------------------------------------------------------------
+
+Contents of Tar file:
+
+Project1.c
+This file contains the main method and handles uses the following helper
+files to complete the project. This is the entry and exit point of the
+program.
+
+BackgroundProcess.(c/h)
+This file provides the functionality of running a process in the background
+and report the time the process took after it has completed.
+
+CD.(c/h)
+This file provides the functionality of changing the user's directory.
+
+CommandExe.(c/h)
+This file provides the functionality of executing a built-in command.
+It uses the Path file to locate the command before executing it.
+
+Echo.(c/h)
+This file provides the functionality of executing the echo command.
+
+EnvVariables.(c/h)
+This file provides the functionality of retrieving the environment variables.
+This is directly used within the Prompt file.
+
+IO.(c/h)
+This file provides the functionality of handling IO redirection by using the
+'<' and '>' symbols
+
+Jobs.(c/h)
+This file provides the functionality to allow the user to display the current
+processes running by typing "jobs"
+
+jobStruct.(c/h)
+This file is a helper function that stores a background processes information.
+Job structs will be used to print a job, and print when a job completes.
+
+jobVector.(c/h)
+This file will store the jobStructs created by the user when a new process
+is made.
+
+Path.(c/h)
+This file handles the functionality to return the path of the command a user is
+trying to execute. This path is used within the CommandExe functions.
+
+Piping.(c/h)
+This file handles the functionality to pipe commands together within the shell.
+The time for piping will be saved and compared to see if it is the longest process
+executed
+
+Prompt.(c/h)
+This file creates the user's prompt before the user's input. This includes the
+users current path, and their username.
+
+Tilde.(c/h)
+This file handles the tilde expansion functionality
+
+tokenlist.(c/h)
+This file handles the tokenlist, list of user entered tokens that will be handled
+in main.
+
+tokenlist2d.(c/h)
+This file stores a list of tokenlists. Used mainly in IO and file redirection.
+
+-----------------------------------------------------------------------------
+
+Git/Commits
+
+We organized our project such that each member had their own branch, and we
+created pull requests before merging into master. This ensured that no merge
+conflicts were ever present on the master branch
+
+There were over 100 commits within our repository and the commit log can be found
+at the following link:
+https://github.com/LukePower17/OS_Project1/commits/master
+
+-----------------------------------------------------------------------------
+
 Extra Credit:
 -Shell-ception
 -Support piping and I/O redirection in a single command
 
 Potential Extra Credit:
--Unlimited Background Proccess Support
+-Unlimited Background Process Support (instructions indicate to support
+up to 10 background process at a time, and our implementation supports
+unlimited)
+
+-----------------------------------------------------------------------------
+
+Known bugs within project:
