@@ -5,6 +5,14 @@ Venkata Sai Pavan Kumar Vadrevu, Daniel Jamsheedy, Luke Power
 
 -----------------------------------------------------------------------------
 
+How to run this program:
+To execute the program run the following commands in order.
+1. "make"
+2. "shell"
+
+
+-----------------------------------------------------------------------------
+
 Delegation of Tasks:
 
 Part 2: Environmental Variables [3]:
@@ -40,6 +48,11 @@ Part 10: Built-In Functions [15]
 -----------------------------------------------------------------------------
 
 Contents of Tar file:
+
+makefile
+Compiles all .c files into object code except Project1.c
+so that they can be linked with Project1 during compilation. The final
+name of the execuatable's name is "shell"
 
 Project1.c
 This file contains the main method and handles uses the following helper
@@ -104,7 +117,6 @@ tokenlist2d.(c/h)
 This file stores a list of tokenlists. Used mainly in IO and file redirection.
 
 -----------------------------------------------------------------------------
-
 Git/Commits
 
 We organized our project such that each member had their own branch, and we
@@ -116,16 +128,12 @@ at the following link:
 https://github.com/LukePower17/OS_Project1/commits/master
 
 -----------------------------------------------------------------------------
-
 Extra Credit:
--Shell-ception
--Support piping and I/O redirection in a single command
 
-Potential Extra Credit:
--Unlimited Background Process Support (instructions indicate to support
-up to 10 background process at a time, and our implementation supports
-unlimited)
+-Shell-ception [1]
 
------------------------------------------------------------------------------
-
+----------------------------------------------------------------------------
 Known bugs within project:
+
+-Most time is not accurate for Background Processes and does not print
+correctly after exiting

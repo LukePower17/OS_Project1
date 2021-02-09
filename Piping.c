@@ -23,10 +23,6 @@ int doPipe(tokenlist *tokens){
 	if (commands->size != numPipe + 1)
 		return (time(NULL) - begin);
 
-	// print_list2d(commands);
-	// printf("numPipes: %d,\nCommands: %d\n", numPipe, commands->size);
-
-
 	// need to do commands == 3, which means 2 pipes
 	if (commands->size == 2){
 		int p1_to_p2[2];
@@ -163,13 +159,6 @@ int doPipe(tokenlist *tokens){
 
 	return time(NULL) - begin;
 }
-
-
-
-
-
-
-
 
 // Returns the number of pipes
 int num_pipes(tokenlist * tokens)

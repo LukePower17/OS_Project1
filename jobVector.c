@@ -14,101 +14,20 @@
 // Returns a new jobVector
 jobVector* new_jobVector(void)
 {
-    // printf("in new job Vector\n");
-
     jobVector* result = (jobVector*) malloc(sizeof(jobVector));
 
     result->curSize = 0;
-    result->size = 0;
-    result->array = (jobStruct**) malloc(sizeof(jobStruct*));
-
-    result->array[0] = NULL;
-    // printf("out of new job Vector\n");
-
-    return result;
-
-}
-
-// DeepCopys a jobVector
-jobVector* copy_jobVector(jobVector* V)
-{
-    // printf("in copy job Vector \n");
-
-    jobVector* result = new_jobVector();
-
-    result->size = V->size;
-    result->curSize = V->curSize;
-
-    free(result->array);
-
+    result->size = 10;
     result->array = (jobStruct**) malloc(sizeof(jobStruct*) * result->size);
 
-    for(int i = 0; i < result->size; i++)
-    {
-        if(i < result->curSize)
-        {
-            result->array[i] = copyJob(V->array[i]);
-        }
-        else
-        {
-            result->array[i] = newJob();
-        }
-    }
-    // printf("out of copy job Vector \n");
-
+    result->array[0] = NULL;
     return result;
-}
 
-// Resizes the vector
-void resize(jobVector* V)
-{
-    // printf("in resize Element\n");
-
-    if(V->size == V->curSize)
-    {
-        // Copyt the array
-        jobStruct** tempArray = (jobStruct**) malloc(sizeof(jobStruct*) * V->size);
-
-        for(int i = 0; i < V->size;i++)
-        {
-            if(i < V->curSize)
-                tempArray[i] = copyJob(V->array[i]);
-            else
-                tempArray[i] = newJob();
-        }
-
-        // Free array in V
-        for(int i = 0; i < V->size; i++)
-        {
-            freeJob(V->array[i]);
-        }
-        free(V->array);
-
-        // Double the size
-        V->size *= 2;
-
-        // Reallocate
-        V->array = (jobStruct**) malloc(sizeof(jobStruct*) * V->size);
-
-        // Copy Job fom tempArray
-        for(int i = 0; i < V->size; i++)
-        {
-            if(i < V->curSize)
-                V->array[i] = copyJob(tempArray[i]);
-            else
-                V->array[i] = newJob();
-        }
-
-    }
-    // printf("out of resize Element\n");
-
-    return;
 }
 
 // Returns the index
 int searchProcess(jobVector* V, pid_t pid)
 {
-    // printf("in search Process\n");
 
     for(int i = 0; i < V->curSize; i++)
     {
@@ -118,7 +37,6 @@ int searchProcess(jobVector* V, pid_t pid)
             return i;
         }
     }
-    // printf("out of search Process\n");
 
     return -1;
 }
@@ -126,8 +44,6 @@ int searchProcess(jobVector* V, pid_t pid)
 // returns the jobStruct
 jobStruct* searchElement(jobVector* V, pid_t pid)
 {
-    // printf("in search Element\n");
-
     int index = searchProcess(V, pid);
     jobStruct* result = NULL;
     if(index != -1)
@@ -135,8 +51,6 @@ jobStruct* searchElement(jobVector* V, pid_t pid)
         result = V->array[index];
     }
 
-    // printf("out of  search Element\n");
-    // printf("index %d\n", index);
     return result;
 }
 
@@ -144,8 +58,6 @@ jobStruct* searchElement(jobVector* V, pid_t pid)
 // 0 otherwise
 int removeElement(jobVector* V, pid_t pid)
 {
-
-    // printf("in remove element\n");
 
     int index = searchProcess(V, pid);
 
@@ -182,14 +94,8 @@ int removeElement(jobVector* V, pid_t pid)
         if(V->curSize > 0)
             V->curSize -= 1;
 
-        // printf("out of remove element\n");
-        // printJobVector(V);
         return 1;
     }
-    // printJobVector(V);
-
-    // printf("out of remove element\n");
-
     return 0;
 }
 
@@ -197,15 +103,9 @@ int removeElement(jobVector* V, pid_t pid)
 // 0 otherwise
 int appendElement(jobVector* V, jobStruct* job)
 {
-    // printf("in append Element\n");
-    if(V->curSize + 1 == V->size)
-    {
-        resize(V);
-    }
 
     V->array[V->curSize] = job;
     V->curSize++;
-    // printf("out of append Element\n");
 
     return 1;
 
@@ -216,8 +116,6 @@ int appendElement(jobVector* V, jobStruct* job)
 // free jobVector
 void free_jobVector(jobVector* V)
 {
-    // printf("in free job Vector Element\n");
-
     if(V != NULL)
     {
         for(int i = 0; i < V->size; i++)
@@ -228,31 +126,22 @@ void free_jobVector(jobVector* V)
 
         free(V);
     }
-
-    // printf("out of free job Vector Element\n");
-
 }
 
 void printJobVector(jobVector* V)
 {
-    // printf("In print job vector\n");
     for(int i = 0; i < V->curSize; i++)
     {
-        printf("%d ", i);
-        if((V->array[i])->completed == 1)
-            printJob(V->array[i]);
-        else if((V->array[i])->completed == 0)
-        {
-            // printf("RUNNING\n");
-            printJob(V->array[i]);
+        printf(">-----------------------------------------------\n");
+              printf("cmd Num %d\n", V->array[i]->cmdNum);
+              printf("pid %ld\n", (long)V->array[i]->pid);
+              printf("completed %d\n", V->array[i]->completed);
+              printf("time Taken %d\n", V->array[i]->timeTaken);
+              printf("start Time %d\n", V->array[i]->startTime);
+              printf("end Time%d\n", V->array[i]->endTime);
+              printf("-----------------------------------------------\n");
 
-        }
-        // printf("\n");
     }
-
-    // printf("Out of print job vector\n");
-
-
 }
 
 int runningCommandExists(jobVector* V)
@@ -262,13 +151,10 @@ int runningCommandExists(jobVector* V)
         pid_t status = waitpid((V->array[i])->pid, NULL, WNOHANG);
         if(status == 0)
         {
-            // printf("RUNNING COMMAND EXISTS!\n");
             return 1;
         }
 
     }
-    // printf("NO RUNNING COMMAND EXISTS!\n");
-
     return 0;
 }
 
@@ -284,7 +170,7 @@ void printCompletedJobs(jobVector* V, time_t current_time)
             {
                 (V->array[i])->endTime = time(NULL);
 
-                (V->array[i])->timeTaken = (V->array[i])->endTime - (V->array[i])->startTime;
+                (V->array[i])->timeTaken = time(NULL) - (V->array[i])->startTime;
                 if((V->array[i])->timeTaken > 0)
                 {
                     (V->array[i])->timeTaken -= current_time;

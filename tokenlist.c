@@ -25,12 +25,6 @@ void add_token(tokenlist *tokens, char *item)
 	tokens->size += 1;
 }
 
-// tokenlist2d Parse (tokenlist* tokens)
-
-// tokenlist2d
-// | > < &
-// 1. & 2. | 3. <>
-
 char *get_input(void)
 {
 	char *buffer = NULL;
