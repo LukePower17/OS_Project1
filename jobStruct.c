@@ -15,8 +15,8 @@ jobStruct* copyJob(jobStruct* job)
     result->command = new_tokenlist();
     result->completed = job->completed;
     result->timeTaken = job->timeTaken;
-    result->startTime = 0;
-    result->endTime = 0;
+    result->startTime = job->startTime;
+    result->endTime = job->endTime;
     for (int i = 0; i < (job->command)->size; i++)
     {
         add_token(result->command, (job->command)->items[i]);
@@ -60,8 +60,6 @@ jobStruct* makejob(int cmdNum, pid_t pid, tokenlist* tokens)
     {
         add_token(job->command, tokens->items[i]);
     }
-    // copy_tokenlist(tokens);
-
 
     return job;
 }

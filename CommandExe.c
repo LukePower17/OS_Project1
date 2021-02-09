@@ -19,9 +19,6 @@ int commandExecution(tokenlist* tokens)
   // using tokenlist as a c string container
   tokenlist *args = new_tokenlist();
 
-
-  // switch echo jobs REDIRECTION Variables and ~
-
   // store resolvedPath with remaining token list
   add_token(args, resolvedPath);
   for (int i = 1; i < tokens->size; i++)

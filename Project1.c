@@ -23,7 +23,6 @@
 #include <ctype.h>
 #include <time.h>
 
-
 int execute(tokenlist* tokens);
 
 int main()
@@ -42,10 +41,6 @@ int main()
 
 	do
 	{
-		// printf("mostTIme %d\n", mostTime);
-		// printJobVector(jobList);
-		// from the map
-
 		// Update most time
 		printCompletedJobs(jobList, currentTime);
 
@@ -67,8 +62,6 @@ int main()
 		 * tokens contains substrings from input split by spaces
 		 */
 		input = get_input();
-		//printf("whole input: *%s*\n", input);
-
 
 		if (input[0] != '\0' && strcmp(input, "exit") != 0)
 		{
@@ -78,8 +71,6 @@ int main()
 			*/
 
 			tokenlist *tokens = get_tokens(input);
-
-			// tokenlist2d = Parse
 
 			if(tokens->items[0][0] == '~' && tokens->size == 1)
 			{
@@ -91,21 +82,18 @@ int main()
 				free_tokens(tokens);
 				tokens = expandedTilde;
 
-				// print_tokens(tokens);
-
 				int isBGProcess= isBackgroundProcess(tokens);
 				if(isBGProcess == 1)
 				{
-					// printf("\nThis is a background process\n");
 					tokenlist* command = getCommandFromBGProcess(tokens);
 					// add the pid to map
 
 					pid_t pid = fork();
 					jobStruct* job = makejob(BGProcessNum, pid, command);
-
+					job->startTime = time(NULL);
 					if(pid == 0)
 					{
-						currentTime = execute(command);
+						execute(command);
 						exit(0);
 					}
 					printJob(job);
@@ -123,15 +111,13 @@ int main()
 					currentTime = execute(tokens);
 				}
 
-				if(currentTime > (mostTime))
+				if((int)currentTime > (int)mostTime)
 				{
-					(mostTime) = currentTime;
+					mostTime = currentTime;
 				}
-
 
 				free_tokens(tokens);
 			}
-
 
 			if(strcmp(input,"exit") == 0 && runningCommandExists(jobList) == 1)
 			{
@@ -140,9 +126,19 @@ int main()
 			}
 		}
 
-
-
 		exits = (strcmp(input, "exit") != 0 || runningCommandExists(jobList) == 1);
+
+		if(exits == 0)
+		{
+			printCompletedJobs(jobList, currentTime);
+			for(int i = 0; i < jobList->curSize; i++)
+			{
+				if( (mostTime) < (jobList->array[i]->timeTaken))
+				{
+					(mostTime) = (jobList->array[i]->timeTaken);
+				}
+			}
+		}
 
 	}while(exits != 0);
 
@@ -176,7 +172,6 @@ int execute(tokenlist* tokens)
 	}
 	else if(strcmp(tokens->items[0], "echo") == 0)
 	{
-		// printf("Exectue Echo\n");
 		currentTime = echo(tokens);
 	}
 	else
